@@ -8,8 +8,8 @@ public class PlayerCollision : MonoBehaviour {
     public GameObject hitParticle, deathParticle;
     [SerializeField]
     private float playerHP = 100;
-    [SerializeField]
-    private float bulletDmg = 3;
+
+    public float bulletDmg = 3;
     //Reference to the current velocity of the player RB
     private Vector2 currentVelocity;
 
@@ -34,14 +34,14 @@ public class PlayerCollision : MonoBehaviour {
 
         playerHP -= dmg;
 
-        if(playerHP <= 0)
+        if (playerHP <= 0)
         {
 
             Instantiate(deathParticle, transform.position, Quaternion.identity);
             playerHP = 100;
         }
 
-        if(playerHP > 0)
+        if (playerHP > 0)
         {
             Instantiate(hitParticle, transform.position, Quaternion.identity);
         }
@@ -52,11 +52,10 @@ public class PlayerCollision : MonoBehaviour {
 
 
 
-
-
-
-
 }
+
+
+
 
 
 

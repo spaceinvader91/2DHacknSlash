@@ -36,25 +36,20 @@ public class GroundDetection : MonoBehaviour {
     void GroundSwitch()
     {
 
-
-
         if (grounded)
         {
-
             //Land Animation
-            parentAnim.SetBool("falling", false);
+            parentAnim.SetBool("landed", true);
             //Ground Check True
             bool hitGround = true;
             playerScript.GroundCheckBool(hitGround);
             //Set the ground as the parent
             playerObject.transform.SetParent(hit.collider.transform.parent);
-
         }
 
         if (!grounded)
-        {
-
-            parentAnim.SetBool("falling", true);
+        { 
+            parentAnim.SetBool("landed", false);
             bool hitGround = false;
             playerScript.GroundCheckBool(hitGround);
             playerObject.transform.parent = null;
@@ -67,11 +62,9 @@ public class GroundDetection : MonoBehaviour {
     /// <summary>
     /// Raycasts below the player, returns null if no ground is detected (needs a layer mask)
     /// </summary>
-    public void RayCastDown()
+    public bool RayCastDown()
     {
         var rayStart = new Vector3(transform.position.x, transform.position.y - rayBegin);
-
-
 
         hit = Physics2D.Raycast(rayStart, Vector2.down, rayDistance);
 
@@ -82,14 +75,14 @@ public class GroundDetection : MonoBehaviour {
             Debug.DrawRay(rayStart, Vector3.down, Color.blue);
         }
 
-
-
         if (hit.collider == null)
         {
             parentAnim.SetBool("landed", false);
             grounded = false;
             Debug.DrawRay(rayStart, Vector3.down, Color.red);
         }
+
+        return grounded;
 
     }
 

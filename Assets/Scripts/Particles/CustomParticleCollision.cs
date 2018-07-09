@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class CustomParticleCollision : MonoBehaviour {
 
+    private PlayerCollision playerCollisionScript;
     private CustomParticles emitterScript;
 
     private float maxLifeTime, timer;
     private bool particlesCollide;
+
 
     private GameObject particleRef;
     public GameObject turretRef;
@@ -18,11 +20,15 @@ public class CustomParticleCollision : MonoBehaviour {
         particleRef = this.gameObject;
         rbRef = GetComponent<Rigidbody2D>();
         emitterScript = GetComponentInParent<CustomParticles>();
-        this.transform.SetParent(turretRef.transform);
+        playerCollisionScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCollision>();
+      
+        //this.transform.SetParent(turretRef.transform);
+        this.transform.SetParent(null);
 
 
         trailRef = GetComponentInChildren<TrailRenderer>();
         spriteRef = GetComponentInChildren<SpriteRenderer>();
+
     }
 
     public void SetParticleLifeTime(float lifeTime)
@@ -64,9 +70,11 @@ public class CustomParticleCollision : MonoBehaviour {
 
         if (hitObject.CompareTag("Ground"))
         {
-            emitterScript.RemoveFromLists(particleRef, rbRef);
+           // emitterScript.RemoveFromLists(particleRef, rbRef);
             Destroy(this.gameObject);
         }
+
+
 
     }
 
@@ -77,58 +85,60 @@ public class CustomParticleCollision : MonoBehaviour {
 
         if (hitObject.CompareTag("HeavyAttack"))
         {
-            print("parried");
             var newDir = turretRef.transform.position - transform.position;
             rbRef.velocity = Vector2.zero;
-            rbRef.AddForce(newDir.normalized*30f , ForceMode2D.Impulse);
-
+            rbRef.AddForce(newDir.normalized*20f , ForceMode2D.Impulse);
 
             ChangeParticleColor();
             ChangeTrailColor();
 
         }
 
-        if (hitObject.CompareTag("HeavyAttack"))
-        {
-
-            var newDir = turretRef.transform.position - transform.position;
-            rbRef.AddForce(newDir.normalized / 150, ForceMode2D.Impulse);
-
-
-        }
-
         if (hitObject.CompareTag("Player"))
         {
-            print("hit player");
-            emitterScript.RemoveFromLists(particleRef, rbRef);
-            Destroy(gameObject);
+            float bulletDmg = playerCollisionScript.bulletDmg;
+            playerCollisionScript.PlayerTakeDamage(3);
+            Destroy(this.gameObject);
+        }
 
+        if (hitObject.CompareTag("Enemy"))
+        {
+
+            print("Enemy");
+            //Hurt enemy method goes here
+             Destroy(this.gameObject);
 
         }
 
-    }
+        }
 
     private TrailRenderer trailRef;
     private SpriteRenderer spriteRef;
-
     public Gradient trailGradient;
 
     public Color parryParticleColor;
-    public Color parryTrailColor;
 
-    void ChangeParticleColor()
+
+    public void ChangeParticleColor()
     {
+
+        
         spriteRef.color = parryParticleColor;
 
 
     }
 
 
-    void ChangeTrailColor()
+    public void ChangeTrailColor()
     {
 
         trailRef.colorGradient = trailGradient;
         
+    }
+
+    private void OnDestroy()
+    {
+        emitterScript.RemoveFromLists(particleRef, rbRef);
     }
 
 }

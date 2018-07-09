@@ -9,6 +9,7 @@ public class AI_Controller : MonoBehaviour {
 
     public float patrolDistance, patrolSpeed;
     public float destDist;
+    public float shootTimer;
     private Vector3 start, des;
 
 	// Use this for initialization
@@ -25,12 +26,20 @@ public class AI_Controller : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if(isGrounded && !hitStunned)
+        if(isGrounded && !hitStunned && !aiRef.FindPlayer())
         {
             aiRef.PhysicsPatrol(start, des, patrolSpeed);
         }
 
-        HitStunTimer();
+        if(isGrounded && !hitStunned && aiRef.FindPlayer())
+        {
+
+            aiRef.FireAtPlayer(shootTimer);
+        }
+
+
+
+            HitStunTimer();
         GroundCheckBool();
 		
 	}

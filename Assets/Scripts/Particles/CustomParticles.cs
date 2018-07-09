@@ -32,8 +32,7 @@ public class CustomParticles : MonoBehaviour {
     public List<GameObject> aliveParticles;
     //Desired Particle
     public GameObject[] particleObjects;
-    //Desired Trail
-    public GameObject particleTrail;
+
 
 
     public void ParticleShoot()
@@ -67,6 +66,8 @@ public class CustomParticles : MonoBehaviour {
 
             //Initial Velocity, relevant to local axis
             particleRB.AddForce(particleRB.transform.up * startingVelocity, ForceMode2D.Impulse);
+
+
 
             //Add each particle rigidbody to the list
             particleRBs.Add(particleRB);
@@ -104,23 +105,6 @@ public class CustomParticles : MonoBehaviour {
     }
 
 
-    //trail 
-    //start color
-    //color over lifetime
-    
-    public void ParticleTrail()
-    {
-        foreach (GameObject particle in aliveParticles)
-        {
-            GameObject trailClone = Instantiate(particleTrail, particle.transform.position, particle.transform.rotation);
-            trailClone.transform.SetParent(particle.transform);
-
-
-        }
-
-
-    }
-
     public bool SetCollisions()
     {
 
@@ -152,6 +136,10 @@ public class CustomParticles : MonoBehaviour {
     private void Start()
     {
         StartCoroutine(SpawnParticles());
+
+        //Reset Lists
+        aliveParticles.Clear();
+        particleRBs.Clear();
     }
 
     private void Update()
@@ -165,19 +153,20 @@ public class CustomParticles : MonoBehaviour {
         ParticleRigidBodySettings();
         ParticleForceOverLifeTime();
         //ParticleTrail();
-        SetLifeTime();
+        ParticleLifeTime();
     }
 
+
     private CustomParticleCollision particleScriptRef;
-    public void SetLifeTime()
+
+    public void ParticleLifeTime()
     {
         foreach (GameObject particle in aliveParticles)
         {
 
             particleScriptRef = particle.GetComponent<CustomParticleCollision>();
-
+            //Run methods attached to each particle to adjust appearance.Minimise use of .GetComponent
             particleScriptRef.SetParticleLifeTime(particleMaxLifeTime);
-            
             
         }
 
@@ -194,7 +183,6 @@ public class CustomParticles : MonoBehaviour {
 
 
     }
-
 
 
 }

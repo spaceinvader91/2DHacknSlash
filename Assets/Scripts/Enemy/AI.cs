@@ -21,7 +21,7 @@ public class AI : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-
+    
         aiControlRef = GetComponent<AI_Controller>();
         rb = GetComponent<Rigidbody2D>();
     }
@@ -98,7 +98,7 @@ public class AI : MonoBehaviour {
 
 
 
-    void FindPlayer()
+    public bool FindPlayer()
     {
         //Straight Line distance
         distanceToPlayer = Vector3.Distance((Vector2)transform.position, (Vector2)playerChar.position);
@@ -126,6 +126,7 @@ public class AI : MonoBehaviour {
         {
             playerInRange = false;
         }
+        return playerInRange;
 
     }
 
@@ -140,9 +141,50 @@ public class AI : MonoBehaviour {
         }
     }
 
+    public GameObject customParticleSystem;
+
+    private float shootTimer;
+    public void FireAtPlayer(float _shootTimer)
+    {
+
+        
+        
+
+        if(shootTimer < _shootTimer)
+        {
+            print("Fire");
+            var particleScript = customParticleSystem.GetComponentInChildren<CustomParticles>();
+            particleScript.enabled = true;
+            shootTimer += Time.deltaTime;
+        }
+
+        if(shootTimer >= _shootTimer)
+        {
+            print("stop firing");
+            var particleScript = customParticleSystem.GetComponentInChildren<CustomParticles>();
+            particleScript.enabled = false;
+            shootTimer = 0;
+
+        }
+
+
+     
+ 
+
+
+    }
 
 
 
 
 
-}
+
+
+
+    }
+
+
+
+
+
+

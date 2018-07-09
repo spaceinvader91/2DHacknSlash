@@ -50,7 +50,18 @@ public class HitPhysics : MonoBehaviour {
     /// <param name="hitForce"></param>
     public void KnockBack(float hitForce)
     {
-        objectRB.AddForce(Vector2.right * hitForce, ForceMode2D.Impulse);
+
+        if (objectRB.transform.localScale.x == -1)
+        {
+
+            objectRB.AddForce(Vector2.left * hitForce, ForceMode2D.Impulse);
+        }
+
+        if (objectRB.transform.localScale.x == 1)
+        {
+
+            objectRB.AddForce(Vector2.right * hitForce, ForceMode2D.Impulse);
+        }
     }
 
     /// <summary>
@@ -59,7 +70,11 @@ public class HitPhysics : MonoBehaviour {
     /// <param name="hitForce"></param>
     public void KnockUp(float hitForce)
     {
-        objectRB.AddForce(Vector2.up * hitForce, ForceMode2D.Impulse);
+
+
+            objectRB.AddRelativeForce(Vector2.up * hitForce, ForceMode2D.Impulse);
+
+        
     }
 
     /// <summary>

@@ -11,6 +11,7 @@ public class AI_Collision : MonoBehaviour {
 
     //Player Cache
     private HitPhysics playerHitRef;
+    private Animator playerAnimRef;
 
 
 
@@ -23,6 +24,7 @@ public class AI_Collision : MonoBehaviour {
 
         //Player References
         playerHitRef = GameObject.FindGameObjectWithTag("Player").GetComponent<HitPhysics>();
+        playerAnimRef = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Animator>();
 
 
         //Initialise the AI
@@ -73,6 +75,7 @@ public class AI_Collision : MonoBehaviour {
         if (other == "LauncherAttack" && !inAir)
         {
             //Adjust enemy settings
+            aiRef.FacePlayer();
             aiHitRef.GravitySetting(juggleGravity);
             aiHitRef.KnockUp(launcherForce);
            // aiHitRef.FreezeTimeOnHit(freezeTimer);
@@ -81,6 +84,9 @@ public class AI_Collision : MonoBehaviour {
             //Adjust player settings
             playerHitRef.GravitySetting(juggleGravity);
             playerHitRef.KnockUp(launcherForce);
+            playerAnimRef.SetBool("heavyAttacking", false);
+            playerAnimRef.SetBool("heavyAttacking2", false);
+            playerAnimRef.SetBool("isLaunching", false);
 
             aerialTimer = 0;
 
@@ -89,6 +95,7 @@ public class AI_Collision : MonoBehaviour {
         if (other == "LightAttack" && !inAir)
         {
             //Adjust enemy settings
+            aiRef.FacePlayer();
             aiHitRef.KnockBack(knockBackForce);
             aiControlRef.HitStunned(true);
             aiControlRef.TakeDamage(launcher);
@@ -101,6 +108,7 @@ public class AI_Collision : MonoBehaviour {
         if (other == "HeavyAttack" && !inAir)
         {
             //adjust enemy settings
+            aiRef.FacePlayer();
             aiHitRef.KnockBack(knockBackForce);
             aiControlRef.HitStunned(true);
             aiControlRef.TakeDamage(swordHit);
@@ -116,6 +124,7 @@ public class AI_Collision : MonoBehaviour {
             ++aerialHitCounter;
 
             //Move the enemy
+            aiRef.FacePlayer();
             aiHitRef.KnockUp(airHitForce);
             //Apply Hitstun
             aiControlRef.HitStunned(true);
@@ -132,6 +141,7 @@ public class AI_Collision : MonoBehaviour {
             ++aerialHitCounter;
 
             //Move the enemy
+            aiRef.FacePlayer();
             aiHitRef.KnockUp(airHitForce);
             //Apply hitstun
             aiControlRef.HitStunned(true);

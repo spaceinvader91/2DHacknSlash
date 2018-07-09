@@ -71,9 +71,7 @@ public class PlayerAttacks : MonoBehaviour {
 
         // X Button
         if (Input.GetKeyDown(GameManager.GM.xButton)
-            && verticalAxis == 0
-            && horizontalAxis == 0)
-
+             && verticalAxis <= 0)
 
         {
             parentAnim.SetBool("heavyAttacking", true);
@@ -81,10 +79,9 @@ public class PlayerAttacks : MonoBehaviour {
         }
 
 
-        // X + Down
+        // X 2nd press
         if (Input.GetKeyDown(GameManager.GM.xButton)
-            && verticalAxis < 0
-            && horizontalAxis == 0)
+            && isHeavyAttacking)
 
 
         {
@@ -99,7 +96,6 @@ public class PlayerAttacks : MonoBehaviour {
         // X + Up --After a heavy attack
         if (Input.GetKeyDown(GameManager.GM.xButton)
             && verticalAxis > 0
-            && horizontalAxis == 0
             && isHeavyAttacking)
         {
             parentAnim.SetBool("isLaunching", true);
@@ -110,7 +106,6 @@ public class PlayerAttacks : MonoBehaviour {
         // X + Up --After a heavy attack 2
         if (Input.GetKeyDown(GameManager.GM.xButton)
             && verticalAxis > 0
-            && horizontalAxis == 0
             && isHeavyAttacking2)
         {
             parentAnim.SetBool("isLaunching", true);
@@ -131,8 +126,8 @@ public class PlayerAttacks : MonoBehaviour {
 
 
         //Punch Attack -- A Button
-        if (Input.GetKeyDown(GameManager.GM.aButton)
-            && !isLightAerialAttacking)
+        if (Input.GetKeyDown(GameManager.GM.aButton))
+           // && !isLightAerialAttacking)
         {
 
             parentAnim.SetBool("lightAerialAttack", true);
