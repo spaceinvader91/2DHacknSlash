@@ -12,8 +12,11 @@ public class AI : MonoBehaviour {
     private Transform playerChar;
     private float range, fov;
     private float distanceToPlayer, angle, angleLeft;
+    private float fireWindow, fireRate, timeBetweenShots;
     private bool playerInRange;
     private bool moveRight;
+
+    public bool playerFound;
    
 
 
@@ -31,17 +34,25 @@ public class AI : MonoBehaviour {
     }
 
     /// <summary>
-    /// Apply AI Variables(Player Transform, Range, FOV)
+    /// Apply AI Variables(Player Transform, Range, FOV, Fire Rate)
     /// </summary>
     /// <param name="player"></param>
     /// <param name="rng"></param>
     /// <param name="_fov"></param>
-    public void SetAIVariables(Transform player, float rng, float _fov)
+    public void SetAIVariables(Transform player, float rng, float _fov,float _fireWindow, float _fireRate, float _timeBetweenShots)
     {
 
         playerChar = player;
         range = rng;
         fov = _fov;
+        fireRate = _fireRate;
+        fireWindow = _fireWindow;
+        timeBetweenShots = _timeBetweenShots;
+    }
+
+    private void Update()
+    {
+        LimitMoveSpeed();
     }
 
 
@@ -67,51 +78,80 @@ public class AI : MonoBehaviour {
 
     }
 
+    private float _speed;
+
+    void MoveRight()
+    {
+        moveRight = true;
+        transform.localScale = new Vector3(1f, 1f, 1f);
+        rb.AddForce(Vector2.right * _speed);
+    }
+
+    void MoveLeft()
+    {
+        moveRight = false;
+        transform.localScale = new Vector3(-1f, 1f, 1f);
+        rb.AddForce(Vector2.left * _speed);
+    }
+
+    void LimitMoveSpeed()
+    {
+        if (rb.velocity.x > 5)
+        {
+            rb.AddForce(Vector2.left * (_speed));
+        }
+
+        if (rb.velocity.x < -5)
+        {
+            rb.AddForce(Vector2.right * (_speed));
+        }
+
+    }
+
     /// <summary>
     /// AI will move Left/Right between 2 vector3s
     /// </summary>
-   public void PhysicsPatrol(Vector3 start, Vector3 des, float speed)
+    /// 
+    //move to new script for advanced control of ai
+    public void PhysicsPatrol(Vector3 start, Vector3 des, float speed)
     {
 
-        if (!playerInRange)
+        //Flip the sprite based on direction of travel
+
+        if (transform.position.x <= start.x)
         {
-            //Flip the sprite based on direction of travel
+            moveRight = true;
+            transform.localScale = new Vector3(1f, 1f, 1f);
+        }
 
-            if (transform.position.x <= start.x)
-            {
-                moveRight = true;
-                transform.localScale = new Vector3(1f, 1f, 1f);
-            }
+        if (transform.position.x >= des.x)
+        {
+            moveRight = false;
+            transform.localScale = new Vector3(-1f, 1f, 1f);
+        }
 
-            if (transform.position.x >= des.x)
-            {
-                moveRight = false;
-                transform.localScale = new Vector3(-1f, 1f, 1f);
-            }
+        if (moveRight)
+        {
+            rb.AddForce(Vector2.right * speed);
 
-            if (moveRight)
-            {
-                rb.AddForce(Vector2.right * speed);
-
-
-            }
-            if (!moveRight)
-            {
-                rb.AddForce(Vector2.left * speed);
-
-            }
-
-            if (rb.velocity.x > 5)
-            {
-                rb.AddForce(Vector2.left * (speed));
-            }
-
-            if (rb.velocity.x < -5)
-            {
-                rb.AddForce(Vector2.right * (speed));
-            }
 
         }
+        if (!moveRight)
+        {
+            rb.AddForce(Vector2.left * speed);
+
+        }
+
+        if (rb.velocity.x > 5)
+        {
+            rb.AddForce(Vector2.left * (speed));
+        }
+
+        if (rb.velocity.x < -5)
+        {
+            rb.AddForce(Vector2.right * (speed));
+        }
+
     }
 
 
@@ -136,6 +176,8 @@ public class AI : MonoBehaviour {
                 //Face Player
                 FacePlayer();
                 playerInRange = true;
+
+                playerFound = true;
             }
 
         }
@@ -148,32 +190,22 @@ public class AI : MonoBehaviour {
 
     }
 
-    void JumpCheck()
-    {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, 1.5f);
-        Debug.DrawRay(transform.position, Vector2.right, Color.green);
-
-        if (hit.collider != null)
-        {
-            Debug.DrawRay(transform.position, Vector2.right, Color.red);
-        }
-    }
-
    
 
-    private float shootTimer, shootDelay;
-    public void FireAtPlayer(float _shootTimer)
+    private float windowTimer, rateTimer, resetWinTimer;
+
+    public void FireAtPlayer()
     {
         customParticleSystem.transform.LookAt(playerChar.transform);
 
-        if (shootDelay < _shootTimer)
+        if ( windowTimer < fireWindow)
         {
 
-            shootDelay += Time.deltaTime;
-            shootTimer += Time.deltaTime;
-            if (shootTimer >= 0.5f)
+            windowTimer += Time.deltaTime;
+            rateTimer += Time.deltaTime;
+            if (rateTimer >= fireRate)
             {
-                shootTimer = 0;
+                rateTimer = 0;
                 particlControlRef.ParticleShoot();
                 
             }
@@ -181,7 +213,47 @@ public class AI : MonoBehaviour {
 
         }
 
- 
+        if(windowTimer >= fireWindow)
+        {
+            resetWinTimer += Time.deltaTime;
+
+            if(resetWinTimer >= timeBetweenShots)
+            {
+                windowTimer = 0;
+                resetWinTimer = 0;
+            }
+
+
+        }
+
+
+    }
+
+    public float maxChaseRange;
+
+    void ChasePlayer()
+    {
+
+        if(distanceToPlayer > maxChaseRange)
+        {
+
+            var playerDir = playerChar.position.x - transform.position.x;
+            
+
+            if(playerDir > 0)
+            {
+
+
+            }
+
+
+            if (playerDir < 0)
+            {
+
+
+            }
+
+        }
 
 
     }

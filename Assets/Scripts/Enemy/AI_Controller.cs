@@ -10,7 +10,7 @@ public class AI_Controller : MonoBehaviour {
     //AI Movement Variables
     public float patrolDistance, patrolSpeed;
     public float destDist;
-    public float shootTimer;
+    public float fireWindow = 2f, fireRate = 0.5f, timeBetweenShots = 1.5f;
     private Vector3 start, des;
 
 
@@ -50,12 +50,13 @@ public class AI_Controller : MonoBehaviour {
         if(isGrounded && !hitStunned && !aiRef.FindPlayer())
         {
             aiRef.PhysicsPatrol(start, des, patrolSpeed);
+    
         }
 
         if(isGrounded && !hitStunned && aiRef.FindPlayer())
         {
 
-            aiRef.FireAtPlayer(shootTimer);
+            aiRef.FireAtPlayer();
         }
 
 
@@ -73,7 +74,7 @@ public class AI_Controller : MonoBehaviour {
 
     void ApplyAISettings()
     {
-        aiRef.SetAIVariables(playerChar, range, fov);
+        aiRef.SetAIVariables(playerChar, range, fov, fireWindow, fireRate, timeBetweenShots);
     }
 
     void ApplyAIReferences()

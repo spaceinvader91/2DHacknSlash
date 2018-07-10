@@ -11,18 +11,18 @@ public class CustomParticleCollision : MonoBehaviour {
     private bool particlesCollide;
 
 
-    private GameObject particleRef;
-    public GameObject turretRef;
+    public GameObject particleRef, sourceRef;
+   
     private Rigidbody2D rbRef;
 
     private void Start()
     {
         particleRef = this.gameObject;
         rbRef = GetComponent<Rigidbody2D>();
-        emitterScript = GetComponentInParent<CustomParticles>();
+        emitterScript = sourceRef.GetComponent<CustomParticles>();
         playerCollisionScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCollision>();
-      
-        //this.transform.SetParent(turretRef.transform);
+       
+      //  this.transform.SetParent(sourceRef.transform);
         this.transform.SetParent(null);
 
 
@@ -44,10 +44,11 @@ public class CustomParticleCollision : MonoBehaviour {
  
         if(timer >= maxLifeTime)
         {
-
-            emitterScript.RemoveFromLists(particleRef, rbRef);
-
-            Destroy(this.gameObject);
+            if (this.gameObject.ToString() != "Particle")
+            {
+                emitterScript.RemoveFromLists(particleRef, rbRef);
+                Destroy(this.gameObject);
+            }
         }
     }
 
@@ -55,7 +56,7 @@ public class CustomParticleCollision : MonoBehaviour {
 
     private void Update()
     {
-        DestroyAfterDelay();
+       //DestroyAfterDelay();
 
 
     }
@@ -67,11 +68,8 @@ public class CustomParticleCollision : MonoBehaviour {
 
         if (hitObject.CompareTag("Ground"))
         {
-            emitterScript.RemoveFromLists(particleRef, rbRef);
             Destroy(this.gameObject);
         }
-
-
 
     }
 
@@ -82,7 +80,7 @@ public class CustomParticleCollision : MonoBehaviour {
 
         if (hitObject.CompareTag("HeavyAttack"))
         {
-            var newDir = turretRef.transform.position - transform.position;
+            var newDir = sourceRef.transform.position - transform.position;
             rbRef.velocity = Vector2.zero;
             rbRef.AddForce(newDir.normalized*20f , ForceMode2D.Impulse);
 
@@ -95,6 +93,8 @@ public class CustomParticleCollision : MonoBehaviour {
         {
             float bulletDmg = playerCollisionScript.bulletDmg;
             playerCollisionScript.PlayerTakeDamage(3);
+
+            emitterScript.RemoveFromLists(particleRef, rbRef);
             Destroy(this.gameObject);
         }
 
@@ -103,7 +103,9 @@ public class CustomParticleCollision : MonoBehaviour {
 
             print("Enemy");
             //Hurt enemy method goes here
-             Destroy(this.gameObject);
+
+            emitterScript.RemoveFromLists(particleRef, rbRef);
+            Destroy(this.gameObject);
 
         }
 

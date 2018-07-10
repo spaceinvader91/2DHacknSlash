@@ -41,8 +41,6 @@ public class RunJump : MonoBehaviour {
     private void Update()
     {
         ReducedJumpMovement();
-      
-        print(playerRB.velocity.x); 
     }
 
     public void RunRight()

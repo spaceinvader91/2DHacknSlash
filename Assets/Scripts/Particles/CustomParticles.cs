@@ -21,7 +21,8 @@ public class CustomParticles : MonoBehaviour {
     public Color particleStartColor;
     //Size
     public float particleStartSize;
-
+    //Particle Source
+    public GameObject source;
 
 
     //Particle Variables
@@ -30,7 +31,7 @@ public class CustomParticles : MonoBehaviour {
     //List of current particle game objects
     public List<GameObject> aliveParticles;
     //Desired Particle
-    public GameObject[] particleObjects;
+    public GameObject particleObject;
 
 
 
@@ -43,11 +44,9 @@ public class CustomParticles : MonoBehaviour {
 
 
 
-        foreach (GameObject toSpawn in particleObjects)
-        {
 
           
-            GameObject particleClone = Instantiate(toSpawn, particleSpawnPoint, transform.rotation);
+            GameObject particleClone = Instantiate(particleObject, particleSpawnPoint, transform.rotation);
 
             //Set color of Sprite
             SpriteRenderer particleSprite = particleClone.GetComponentInChildren<SpriteRenderer>();
@@ -57,7 +56,8 @@ public class CustomParticles : MonoBehaviour {
 
 
             //Set parent for script reference
-            particleClone.transform.SetParent(this.gameObject.transform);
+            //particleClone.transform.SetParent(this.gameObject.transform);
+            particleClone.transform.SetParent(source.transform);
 
             //Add spawned particles to the list
             aliveParticles.Add(particleClone);
@@ -76,7 +76,7 @@ public class CustomParticles : MonoBehaviour {
             particleRBs.Add(particleRB);
 
 
-        }
+        
         
 
 
@@ -176,7 +176,7 @@ public class CustomParticles : MonoBehaviour {
     
     public void RemoveFromLists(GameObject particle, Rigidbody2D particleRB)
     {
-       
+
 
         aliveParticles.Remove(particle);
         particleRBs.Remove(particleRB);
