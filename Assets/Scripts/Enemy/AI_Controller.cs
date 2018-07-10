@@ -4,24 +4,45 @@ using UnityEngine;
 
 public class AI_Controller : MonoBehaviour {
 
-    private AI aiRef;
-   // private HitPhysics physicsRef;
 
+    public Transform playerChar;
+    public float range, fov;
+    //AI Movement Variables
     public float patrolDistance, patrolSpeed;
     public float destDist;
     public float shootTimer;
     private Vector3 start, des;
 
-	// Use this for initialization
-	void Start () {
+
+
+    //AI Script
+    private AI aiRef;
+    AI_Controller aiControlRef;
+
+    //Particle Controls
+    CustomParticles customPartRef;
+
+    //RigidBody
+    Rigidbody2D rbRef;
+
+
+    // Use this for initialization
+    void Start () {
 
         //Set patrol path
          start = new Vector3(transform.position.x - destDist, transform.position.y);
          des = new Vector3(transform.position.x + destDist, transform.position.y);
 
+        //Grab AI References
         aiRef = GetComponent<AI>();
-        //physicsRef = GetComponent<HitPhysics>();
+        aiControlRef = GetComponent<AI_Controller>();
+        customPartRef = GetComponentInChildren<CustomParticles>();
+        rbRef = GetComponent<Rigidbody2D>();
+
+
+        ApplyAIReferences();
 	}
+
 
 	// Update is called once per frame
 	void Update () {
@@ -41,8 +62,25 @@ public class AI_Controller : MonoBehaviour {
 
             HitStunTimer();
         GroundCheckBool();
+
+        ApplyAISettings();
 		
 	}
+
+    //
+    // Variables to other scripts
+    //
+
+    void ApplyAISettings()
+    {
+        aiRef.SetAIVariables(playerChar, range, fov);
+    }
+
+    void ApplyAIReferences()
+    {
+        aiRef.GrabAIReferences(aiControlRef, rbRef, customPartRef);
+
+    }
 
     //
     // Damage Variables & Methods

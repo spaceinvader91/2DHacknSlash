@@ -10,16 +10,22 @@ public class RunJump : MonoBehaviour {
     private Animator playerAnim;
     public Rigidbody2D playerRB;
 
+    //cache
+    private GroundDetection groundDetectionRef;
+
     //Run Variables
     private float
         dPadHorizontalAxis;
 
     public float
-        runSpeed = 6f;
+        runSpeed = 6f,
+        maxRunSpeed,
+        maxJumpSpeed;
+    private float defaultRunspeed, reducedRunSpeed = 3f;
 
     //Jump Variables
     [SerializeField]
-    private float jumpForce = 4f;
+    private float jumpForce = 4f, forwardJumpForce = 2f;
 
 
     private void Start()
@@ -27,23 +33,63 @@ public class RunJump : MonoBehaviour {
         playerT = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         playerAnim = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Animator>();
         playerRB = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
+        groundDetectionRef = GameObject.FindGameObjectWithTag("Player").GetComponent<GroundDetection>();
+
+        defaultRunspeed = runSpeed;
     }
 
+    private void Update()
+    {
+        ReducedJumpMovement();
+      
+        print(playerRB.velocity.x); 
+    }
 
     public void RunRight()
     {
-        playerAnim.SetBool("isRunning", true);
-        playerT.localScale = new Vector3(1f, 1f, 1f);
-        playerT.Translate(Vector2.right * runSpeed * Time.deltaTime);
+        if (groundDetectionRef.RayCastDown())
+        {
+            playerAnim.SetBool("isRunning", true);
+            playerT.localScale = new Vector3(1f, 1f, 1f);
+            playerRB.AddForce(Vector3.right * runSpeed);
 
+            if(playerRB.velocity.x >= maxRunSpeed)
+            {
+                playerRB.AddForce(Vector2.left * runSpeed);
+            }
+
+        }
+
+        if (!groundDetectionRef.RayCastDown())
+        {
+            playerAnim.SetBool("isRunning", false);
+            playerT.localScale = new Vector3(1f, 1f, 1f);
+  
+
+
+        }
     }
 
     public void RunLeft()
     {
-        playerAnim.SetBool("isRunning", true);
+        if (groundDetectionRef.RayCastDown())
+        {
+            playerAnim.SetBool("isRunning", true);
+            playerT.localScale = new Vector3(-1f, 1f, 1f);
+            playerRB.AddRelativeForce(Vector2.left * runSpeed);
 
-        playerT.localScale = new Vector3(-1f, 1f, 1f);
-        playerT.Translate(Vector2.left * runSpeed * Time.deltaTime);
+            if (playerRB.velocity.x <= -maxRunSpeed)
+            {
+                playerRB.AddForce(Vector2.right * runSpeed);
+            }
+        }
+
+        if (!groundDetectionRef.RayCastDown())
+        {
+            playerAnim.SetBool("isRunning", false);
+            playerT.localScale = new Vector3(-1f, 1f, 1f);
+   
+        }
     }
 
     public void RunStop()
@@ -53,9 +99,52 @@ public class RunJump : MonoBehaviour {
 
     public void Jump()
     {
+        //reduce movement
+        //use axis for direction check
+
         playerAnim.SetTrigger("jump");
-       // playerRB.gravityScale = 1;
         playerRB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
+        if(playerT.localScale.x == 1 && playerAnim.GetBool("isRunning"))
+        {
+            playerRB.AddForce(Vector2.right * forwardJumpForce, ForceMode2D.Impulse);
+        }
+
+        if(playerT.localScale.x == -1 && playerAnim.GetBool("isRunning"))
+        {
+            playerRB.AddForce(Vector2.left * forwardJumpForce, ForceMode2D.Impulse);
+        }
+    }
+
+
+    private void ReducedJumpMovement()
+    {
+        if (!groundDetectionRef.RayCastDown())
+        {
+            if (playerT.localScale.x == 1)
+            {
+                playerAnim.SetBool("isRunning", false);
+                playerRB.AddForce(Vector2.right * reducedRunSpeed);
+
+                if (playerRB.velocity.x >= maxJumpSpeed)
+                {
+                    playerRB.AddForce(Vector2.left * playerRB.velocity.x);
+                }
+
+
+            }
+
+            if (playerT.localScale.x == -1)
+            {
+                playerAnim.SetBool("isRunning", false);
+                playerRB.AddForce(Vector2.left * reducedRunSpeed);
+
+                if (playerRB.velocity.x <= -maxJumpSpeed)
+                {
+                    playerRB.AddForce(Vector2.right * -playerRB.velocity.x);
+                }
+
+            }
+        }
     }
 }

@@ -21,8 +21,7 @@ public class CustomParticles : MonoBehaviour {
     public Color particleStartColor;
     //Size
     public float particleStartSize;
-    //Collision
-    public bool particleCollision;
+
 
 
     //Particle Variables
@@ -46,6 +45,8 @@ public class CustomParticles : MonoBehaviour {
 
         foreach (GameObject toSpawn in particleObjects)
         {
+
+          
             GameObject particleClone = Instantiate(toSpawn, particleSpawnPoint, transform.rotation);
 
             //Set color of Sprite
@@ -65,8 +66,10 @@ public class CustomParticles : MonoBehaviour {
             Rigidbody2D particleRB = particleClone.GetComponent<Rigidbody2D>();
 
             //Initial Velocity, relevant to local axis
-            particleRB.AddForce(particleRB.transform.up * startingVelocity, ForceMode2D.Impulse);
-
+            particleRB.AddForce(particleRB.transform.forward * startingVelocity, ForceMode2D.Impulse);
+            var tempTrans = particleClone.gameObject.transform;
+            tempTrans.eulerAngles = new Vector3(0, 0, 0);
+            particleClone.gameObject.transform.eulerAngles = tempTrans.eulerAngles;
 
 
             //Add each particle rigidbody to the list
@@ -105,26 +108,23 @@ public class CustomParticles : MonoBehaviour {
     }
 
 
-    public bool SetCollisions()
+
+    private bool isFiring;
+    public void FireSwitch(bool _bool)
     {
-
-        return particleCollision;
-
+        isFiring = _bool;
     }
-
-
-
-
-
-    
 
     IEnumerator SpawnParticles()
     {
-        yield return new WaitForSeconds(spawnDelay);
-        ParticleShoot();
-        yield return StartCoroutine(SpawnParticles());
-    }
 
+        if (isFiring)
+        {
+            yield return new WaitForSeconds(spawnDelay);
+            ParticleShoot();
+            yield return StartCoroutine(SpawnParticles());
+        }
+    }
 
 
 
@@ -135,7 +135,7 @@ public class CustomParticles : MonoBehaviour {
 
     private void Start()
     {
-        StartCoroutine(SpawnParticles());
+        //StartCoroutine(SpawnParticles());
 
         //Reset Lists
         aliveParticles.Clear();
@@ -154,6 +154,7 @@ public class CustomParticles : MonoBehaviour {
         ParticleForceOverLifeTime();
         //ParticleTrail();
         ParticleLifeTime();
+        //StartCoroutine(SpawnParticles());
     }
 
 
@@ -184,5 +185,13 @@ public class CustomParticles : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Resets lists when called
+    /// </summary>
+    public void OnSetActive()
+    {
+        aliveParticles.Clear();
+        particleRBs.Clear();
+    }
 
 }

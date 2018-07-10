@@ -13,7 +13,20 @@ public class AI_Collision : MonoBehaviour {
     private HitPhysics playerHitRef;
     private Animator playerAnimRef;
 
-
+    //Force 
+    public float knockDownForce, launcherForce, knockBackForce, airHitForce,hitForce = 2;
+    //Gravity
+    public float  defaultGravity = 3, juggleGravity = 1;
+    ///Aerial
+    public float aerialHitLimit = 3f, hangTime;
+    private bool inAir;
+    private float aerialTimer, aerialHitCounter;
+    public float freezeTimer = 0.2f;
+    //Damage
+ 
+    public float
+        swordHit = 1,
+        launcher = 1;
 
     private void Start()
     {
@@ -47,23 +60,17 @@ public class AI_Collision : MonoBehaviour {
     //
     //Collision Goes Under Here
     //
-    [SerializeField]
-    private float aerialTimer, aerialHitCounter;
 
     /// <summary>
     /// Number of Hits before being knocked to the ground
     /// </summary>
-    public float aerialHitLimit = 3f, defaultGravity = 3, juggleGravity = 1;
-    [SerializeField]
-    public float knockDownForce, launcherForce, knockBackForce,airHitForce, freezeTimer, hangTime;
+   
+    
 
 
-    public float hitForce = 2;
-    public float
-        swordHit = 1,
-        launcher = 1;
 
-    private bool inAir;
+
+   
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

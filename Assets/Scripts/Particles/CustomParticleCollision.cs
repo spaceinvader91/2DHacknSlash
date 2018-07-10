@@ -51,10 +51,7 @@ public class CustomParticleCollision : MonoBehaviour {
         }
     }
 
-    private void ParticleCollisions()
-    {
-        particlesCollide = emitterScript.SetCollisions();
-    }
+
 
     private void Update()
     {
@@ -70,7 +67,7 @@ public class CustomParticleCollision : MonoBehaviour {
 
         if (hitObject.CompareTag("Ground"))
         {
-           // emitterScript.RemoveFromLists(particleRef, rbRef);
+            emitterScript.RemoveFromLists(particleRef, rbRef);
             Destroy(this.gameObject);
         }
 
@@ -140,6 +137,8 @@ public class CustomParticleCollision : MonoBehaviour {
     {
         emitterScript.RemoveFromLists(particleRef, rbRef);
     }
+
+
 
 }
 

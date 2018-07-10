@@ -4,26 +4,44 @@ using UnityEngine;
 
 public class AI : MonoBehaviour {
 
+    public GameObject customParticleSystem;
+
     private AI_Controller aiControlRef;
+    private CustomParticles particlControlRef;
     private Rigidbody2D rb;
-
-
-   
-    public Transform playerChar;
-    public float range, fov;
-
+    private Transform playerChar;
+    private float range, fov;
     private float distanceToPlayer, angle, angleLeft;
     private bool playerInRange;
     private bool moveRight;
+   
 
 
-
-    // Use this for initialization
-    void Start()
+    /// <summary>
+    /// Send References to the  AI script
+    /// </summary>
+    /// <param name="aiControl"></param>
+    /// <param name="rbRef"></param>
+    /// <param name="cusPart"></param>
+    public void GrabAIReferences(AI_Controller aiControl, Rigidbody2D rbRef, CustomParticles cusPart)
     {
-    
-        aiControlRef = GetComponent<AI_Controller>();
-        rb = GetComponent<Rigidbody2D>();
+        aiControlRef = aiControl;
+        rb = rbRef;
+        particlControlRef = cusPart;
+    }
+
+    /// <summary>
+    /// Apply AI Variables(Player Transform, Range, FOV)
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="rng"></param>
+    /// <param name="_fov"></param>
+    public void SetAIVariables(Transform player, float rng, float _fov)
+    {
+
+        playerChar = player;
+        range = rng;
+        fov = _fov;
     }
 
 
@@ -141,47 +159,35 @@ public class AI : MonoBehaviour {
         }
     }
 
-    public GameObject customParticleSystem;
+   
 
-    private float shootTimer;
+    private float shootTimer, shootDelay;
     public void FireAtPlayer(float _shootTimer)
     {
+        customParticleSystem.transform.LookAt(playerChar.transform);
 
-        
-        
-
-        if(shootTimer < _shootTimer)
+        if (shootDelay < _shootTimer)
         {
-            print("Fire");
-            var particleScript = customParticleSystem.GetComponentInChildren<CustomParticles>();
-            particleScript.enabled = true;
+
+            shootDelay += Time.deltaTime;
             shootTimer += Time.deltaTime;
+            if (shootTimer >= 0.5f)
+            {
+                shootTimer = 0;
+                particlControlRef.ParticleShoot();
+                
+            }
+
+
         }
 
-        if(shootTimer >= _shootTimer)
-        {
-            print("stop firing");
-            var particleScript = customParticleSystem.GetComponentInChildren<CustomParticles>();
-            particleScript.enabled = false;
-            shootTimer = 0;
-
-        }
-
-
-     
  
 
 
     }
 
 
-
-
-
-
-
-
-    }
+}
 
 
 
