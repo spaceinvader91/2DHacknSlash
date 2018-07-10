@@ -4,13 +4,17 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 
-public class HitPhysics : MonoBehaviour {
+public class PlayerPhysics : MonoBehaviour
+{
 
- 
+
 
     //Cache
 
-    public Rigidbody2D objectRB;
+    private Rigidbody2D objectRB;
+    private GroundDetection playerGroundRef;
+
+    public float defaultGravity = 5;
 
 
     // Use this for initialization
@@ -18,6 +22,7 @@ public class HitPhysics : MonoBehaviour {
     {
 
         objectRB = GetComponent<Rigidbody2D>();
+        playerGroundRef = GetComponent<GroundDetection>();
 
     }
 
@@ -26,12 +31,8 @@ public class HitPhysics : MonoBehaviour {
         GravitySimulation();
     }
 
-    //face player on collision
-    //collision runs knockback method
-    //collision sets gravity
-    //collision sets force
 
-    private float gravity= 10;
+    private float gravity = 10;
     /// <summary>
     /// Pushes the RB down by float 
     /// </summary>
@@ -40,9 +41,6 @@ public class HitPhysics : MonoBehaviour {
     {
         gravity = grav;
 
-        //fix this exception
-     //   objectRB = GetComponent<Rigidbody2D>();
-      
     }
 
 
@@ -74,9 +72,9 @@ public class HitPhysics : MonoBehaviour {
     {
 
 
-            objectRB.AddRelativeForce(Vector2.up * hitForce, ForceMode2D.Impulse);
+        objectRB.AddRelativeForce(Vector2.up * hitForce, ForceMode2D.Impulse);
 
-        
+
     }
 
     /// <summary>
@@ -102,6 +100,13 @@ public class HitPhysics : MonoBehaviour {
     private void GravitySimulation()
     {
         objectRB.AddForce(Vector3.down * gravity);
+
+
+        if (playerGroundRef.RayCastDown())
+        {
+
+            gravity = defaultGravity;
+        }
     }
 
 

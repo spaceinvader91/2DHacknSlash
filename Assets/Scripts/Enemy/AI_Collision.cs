@@ -10,13 +10,13 @@ public class AI_Collision : MonoBehaviour {
     private HitPhysics aiHitRef;
 
     //Player Cache
-    private HitPhysics playerHitRef;
+    private PlayerPhysics playerHitRef;
     private Animator playerAnimRef;
 
     //Force 
     public float knockDownForce, launcherForce, knockBackForce, airHitForce,hitForce = 2;
     //Gravity
-    public float  defaultGravity = 3, juggleGravity = 1;
+    public float  defaultGravity, juggleGravity;
     ///Aerial
     public float aerialHitLimit = 3f, hangTime;
     private bool inAir;
@@ -36,7 +36,7 @@ public class AI_Collision : MonoBehaviour {
         aiHitRef = GetComponent<HitPhysics>();
 
         //Player References
-        playerHitRef = GameObject.FindGameObjectWithTag("Player").GetComponent<HitPhysics>();
+        playerHitRef = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerPhysics>();
         playerAnimRef = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Animator>();
 
 
@@ -44,7 +44,7 @@ public class AI_Collision : MonoBehaviour {
         aiHitRef.GravitySetting(defaultGravity);
 
         //Initialise the Player
-        playerHitRef.GravitySetting(defaultGravity);
+        //playerHitRef.GravitySetting(defaultGravity);
     }
 
     private void Update()
@@ -89,7 +89,7 @@ public class AI_Collision : MonoBehaviour {
             aiControlRef.HitStunned(true);
 
             //Adjust player settings
-            playerHitRef.GravitySetting(juggleGravity);
+           // playerHitRef.GravitySetting(juggleGravity);
             playerHitRef.KnockUp(launcherForce);
             playerAnimRef.SetBool("heavyAttacking", false);
             playerAnimRef.SetBool("heavyAttacking2", false);
@@ -175,7 +175,7 @@ public class AI_Collision : MonoBehaviour {
        
 
             //Reset Player gravity and knockdown
-            playerHitRef.GravitySetting(defaultGravity);
+          //  playerHitRef.GravitySetting(defaultGravity);
             playerHitRef.KnockDown(knockDownForce);
 
             //Freeze Time
@@ -211,7 +211,7 @@ public class AI_Collision : MonoBehaviour {
         {
             inAir = false;
            aiHitRef.GravitySetting(defaultGravity);
-            playerHitRef.GravitySetting(defaultGravity);
+  
         }
     }
 
