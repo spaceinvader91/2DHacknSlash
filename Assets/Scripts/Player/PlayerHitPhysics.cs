@@ -4,13 +4,17 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 
-public class HitPhysics : MonoBehaviour {
+public class PlayerHitPhysics : MonoBehaviour
+{
 
- 
+
 
     //Cache
 
     private Rigidbody2D objectRB;
+    private GroundDetection groundDetectionRef;
+
+    public float defaultGravity = 5;
 
 
     // Use this for initialization
@@ -18,6 +22,7 @@ public class HitPhysics : MonoBehaviour {
     {
 
         objectRB = GetComponent<Rigidbody2D>();
+        groundDetectionRef = GetComponent<GroundDetection>();
 
     }
 
@@ -26,12 +31,8 @@ public class HitPhysics : MonoBehaviour {
         GravitySimulation();
     }
 
-    //face player on collision
-    //collision runs knockback method
-    //collision sets gravity
-    //collision sets force
 
-    private float gravity;
+    private float gravity = 10;
     /// <summary>
     /// Pushes the RB down by float 
     /// </summary>
@@ -40,9 +41,6 @@ public class HitPhysics : MonoBehaviour {
     {
         gravity = grav;
 
-        //fix this exception
-     //   objectRB = GetComponent<Rigidbody2D>();
-      
     }
 
 
@@ -74,9 +72,9 @@ public class HitPhysics : MonoBehaviour {
     {
 
 
-            objectRB.AddRelativeForce(Vector2.up * hitForce, ForceMode2D.Impulse);
+        objectRB.AddRelativeForce(Vector2.up * hitForce, ForceMode2D.Impulse);
 
-        
+
     }
 
     /// <summary>
@@ -86,14 +84,6 @@ public class HitPhysics : MonoBehaviour {
     public void KnockDown(float hitForce)
     {
         objectRB.AddForce(Vector2.down * hitForce, ForceMode2D.Impulse);
-    }
-
-    /// <summary>
-    /// Sets the velocity of the RB to 0
-    /// </summary>
-    public void ResetVelocity()
-    {
-        objectRB.velocity = Vector2.zero;
     }
 
 
@@ -109,15 +99,17 @@ public class HitPhysics : MonoBehaviour {
 
     private void GravitySimulation()
     {
-
         objectRB.AddForce(Vector3.down * gravity);
+
+
+        if (groundDetectionRef.RayCastDown())
+        {
+
+            gravity = defaultGravity;
+        }
     }
 
-    private void AirPushBack()
-    {
-
-    }
-
+   // private void 
 
 
 

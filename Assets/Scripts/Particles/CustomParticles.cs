@@ -21,8 +21,6 @@ public class CustomParticles : MonoBehaviour {
     public Color particleStartColor;
     //Size
     public float particleStartSize;
-    //Particle Source
-    public GameObject source;
 
 
     //Particle Variables
@@ -32,13 +30,26 @@ public class CustomParticles : MonoBehaviour {
     public List<GameObject> aliveParticles;
     //Desired Particle
     public GameObject particleObject;
+    //Parent Object
+    public GameObject parentObject;
 
+    
 
 
     public void ParticleShoot()
     {
-        //Set particle Spawn
-        Vector2 particleSpawnPoint = new Vector3(transform.position.x + xOffset, transform.position.y + yOffest);
+        Vector2 particleSpawnPoint = new Vector2(0, 0);
+
+        if (parentObject.transform.localScale.x == 1)
+        {
+            //Set particle Spawn
+             particleSpawnPoint = new Vector3(transform.position.x + xOffset, transform.position.y + yOffest);
+        }
+        if (parentObject.transform.localScale.x == -1)
+        {
+            //Set particle Spawn
+            particleSpawnPoint = new Vector3(transform.position.x - xOffset, transform.position.y - yOffest);
+        }
 
         //Create a clone of the desired object
 
@@ -57,7 +68,7 @@ public class CustomParticles : MonoBehaviour {
 
             //Set parent for script reference
             //particleClone.transform.SetParent(this.gameObject.transform);
-            particleClone.transform.SetParent(source.transform);
+            particleClone.transform.SetParent(parentObject.transform);
 
             //Add spawned particles to the list
             aliveParticles.Add(particleClone);

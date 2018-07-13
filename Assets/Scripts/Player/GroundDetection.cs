@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GroundDetection : MonoBehaviour {
 
-    private PlayerController playerScript;
+    private PlayerController controllerRef;
     private Animator parentAnim;
     private Rigidbody2D parentRb;
     private GameObject playerObject;
@@ -16,7 +16,7 @@ public class GroundDetection : MonoBehaviour {
     {
 
 
-        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        controllerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         parentAnim = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Animator>();
         parentRb = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
         playerObject = GameObject.FindGameObjectWithTag("Player");
@@ -42,7 +42,7 @@ public class GroundDetection : MonoBehaviour {
             parentAnim.SetBool("landed", true);
             //Ground Check True
             bool hitGround = true;
-            playerScript.GroundCheckBool(hitGround);
+            controllerRef.GroundCheckBool(hitGround);
             //Set the ground as the parent
             playerObject.transform.SetParent(hit.collider.transform.parent);
         }
@@ -51,7 +51,7 @@ public class GroundDetection : MonoBehaviour {
         { 
             parentAnim.SetBool("landed", false);
             bool hitGround = false;
-            playerScript.GroundCheckBool(hitGround);
+            controllerRef.GroundCheckBool(hitGround);
             playerObject.transform.parent = null;
         }
     }

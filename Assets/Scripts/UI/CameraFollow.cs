@@ -4,7 +4,7 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
 
-    public float dampTime = 0.15f, slowedDamp = 1.5f, snapTolerance = 2f, smoothSpeed = 1f;
+    public float dampTime = 0.15f, slowedDamp = 1.5f, smoothSpeed = 1f, maxCamSpeed = 10f;
     private float currentDampTime;
     public Vector3 offset = new Vector3(0.5f, 0.2f, 0);
 
@@ -12,15 +12,33 @@ public class CameraFollow : MonoBehaviour
     public Transform target;
     public Camera cam;
 
+
     // Update is called once per frame
+
+    private void Start()
+    {
+  
+    }
     void Update()
     {
-        ReduceSnap();
+        //ReduceSnap();
         FollowPlayer();
-
+       // CapCamSpeed();
     
     }
 
+    void CapCamSpeed()
+    {
+
+        print(cam.velocity.x);
+        float camSpeedX = cam.velocity.x;
+        if(camSpeedX >= maxCamSpeed)
+        {
+
+        }
+
+
+    }
 
 
 
@@ -36,13 +54,15 @@ public class CameraFollow : MonoBehaviour
             if (target.localScale == new Vector3(1f, 1f, 1f))
             {
                 destination = destination + offset;
-                transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, currentDampTime);
+               destination = new Vector3(destination.x, offset.y + destination.y, -10);
+                transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
             }
 
             else if (target.localScale == new Vector3(-1f, 1f, 1f))
             {
                 destination = destination + -offset;
-                transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, currentDampTime);
+                destination = new Vector3(destination.x, offset.y + destination.y, -10);
+                transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
             }
         }
     }
@@ -50,16 +70,25 @@ public class CameraFollow : MonoBehaviour
     void ReduceSnap()
     {
 
-        if(Vector2.Distance(this.transform.position, target.position) > snapTolerance)
-        {
+        //print(Vector2.Distance(transform.position, target.position));
+        //print(cam.velocity.x);
+        float camSpeedX = cam.velocity.x;
 
-            currentDampTime = Mathf.Lerp(currentDampTime, dampTime, smoothSpeed * Time.deltaTime);
+        if (camSpeedX >= maxCamSpeed || camSpeedX <= -maxCamSpeed)
+        {
+            print("true");
+           // currentDampTime = Mathf.Lerp(currentDampTime, slowedDamp, smoothSpeed * Time.deltaTime);
+            currentDampTime = slowedDamp;
 
         }
 
+
+
+
         else
         {
-            currentDampTime = Mathf.Lerp(currentDampTime, slowedDamp, smoothSpeed * Time.deltaTime);
+            //currentDampTime = Mathf.Lerp(currentDampTime, dampTime, smoothSpeed * Time.deltaTime);
+            currentDampTime = dampTime;
         }
 
     }

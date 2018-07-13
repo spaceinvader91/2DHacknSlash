@@ -6,6 +6,7 @@ public class AI : MonoBehaviour {
 
     public GameObject customParticleSystem;
 
+    public  AI_WallRay aiWallRay;
     private AI_Controller aiControlRef;
     private CustomParticles particlControlRef;
     private Rigidbody2D rb;
@@ -17,7 +18,7 @@ public class AI : MonoBehaviour {
     private bool moveRight;
 
     public bool playerFound;
-   
+
 
 
     /// <summary>
@@ -26,11 +27,12 @@ public class AI : MonoBehaviour {
     /// <param name="aiControl"></param>
     /// <param name="rbRef"></param>
     /// <param name="cusPart"></param>
-    public void GrabAIReferences(AI_Controller aiControl, Rigidbody2D rbRef, CustomParticles cusPart)
+    public void GrabAIReferences(AI_Controller aiControl, Rigidbody2D rbRef, CustomParticles cusPart, AI_WallRay aiRay)
     {
         aiControlRef = aiControl;
         rb = rbRef;
         particlControlRef = cusPart;
+        aiWallRay = aiRay;
     }
 
     /// <summary>
@@ -53,6 +55,7 @@ public class AI : MonoBehaviour {
     private void Update()
     {
         LimitMoveSpeed();
+      //  JumpCheck();
     }
 
 
@@ -108,6 +111,7 @@ public class AI : MonoBehaviour {
 
     }
 
+
     /// <summary>
     /// AI will move Left/Right between 2 vector3s
     /// </summary>
@@ -142,16 +146,6 @@ public class AI : MonoBehaviour {
 
         }
 
-        if (rb.velocity.x > 5)
-        {
-            rb.AddForce(Vector2.left * (speed));
-        }
-
-        if (rb.velocity.x < -5)
-        {
-            rb.AddForce(Vector2.right * (speed));
-        }
-
     }
 
 
@@ -159,6 +153,7 @@ public class AI : MonoBehaviour {
     public bool FindPlayer()
     {
         //Straight Line distance
+        playerChar = GameObject.FindGameObjectWithTag("Player").transform;
         distanceToPlayer = Vector3.Distance((Vector2)transform.position, (Vector2)playerChar.position);
 
         //The Angle the player is at
@@ -223,37 +218,75 @@ public class AI : MonoBehaviour {
                 resetWinTimer = 0;
             }
 
+        }
+
+
+    }
+
+    /// <summary>
+    /// Chases the player when they leave maxChaseRange
+    /// </summary>
+    /// <param name="speed"></param>
+    /// <param name="maxChaseRange"></param>
+
+    public void ChasePlayer(float speed, float maxChaseRange)
+    {
+        
+
+        if(distanceToPlayer > maxChaseRange)
+        {
+    
+            var playerDir = playerChar.position.x - transform.position.x;
+            
+
+            if(playerDir > 0)
+            {
+       
+
+  
+                    rb.AddForce(Vector2.right * speed);
+                JumpCheck();
+
+            }
+
+            if (playerDir < 0)
+            {
+        
+
+                    rb.AddForce(Vector2.left * speed);
+                JumpCheck();
+
+            }
 
         }
 
 
     }
 
-    public float maxChaseRange;
 
-    void ChasePlayer()
+    public float jumpForce, maxJumpSpeed;
+    public void JumpCheck()
     {
 
-        if(distanceToPlayer > maxChaseRange)
+        if (aiControlRef.GroundCheckBool())
         {
 
-            var playerDir = playerChar.position.x - transform.position.x;
-            
-
-            if(playerDir > 0)
+ 
+            if (aiWallRay.PlatformRayCast())
             {
-
-
+                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                rb.AddForce(Vector2.right * jumpForce);
             }
 
 
-            if (playerDir < 0)
+            //put same limit on player char
+            if (rb.velocity.y > maxJumpSpeed)
             {
-
-
+                rb.AddForce(Vector2.down * rb.velocity.y);
             }
 
         }
+
 
 
     }

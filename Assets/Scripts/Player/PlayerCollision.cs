@@ -4,26 +4,23 @@ using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour {
 
-    private Rigidbody2D playerRb;
-    public GameObject hitParticle, deathParticle;
+    //standarise these variable names
+    private PlayerHitPhysics playerPhysicsRef;
+
+    [SerializeField]
+    private GameObject hitParticle, deathParticle;
     [SerializeField]
     private float playerHP = 100;
 
+    //public for access outside this script
     public float bulletDmg = 3;
-    //Reference to the current velocity of the player RB
-    private Vector2 currentVelocity;
+
 
     private void Start()
     {
 
-        playerRb = GetComponentInParent<Rigidbody2D>();
-
     }
 
-    private void FixedUpdate()
-    {
-        currentVelocity = playerRb.velocity;
-    }
 
     /// <summary>
     /// Removes HP by float dmg, Player Death if HP = 0
@@ -48,6 +45,17 @@ public class PlayerCollision : MonoBehaviour {
 
 
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        GameObject other = collision.gameObject;
+
+        if (other.CompareTag("Enemy"))
+        {
+            
+
+        }
     }
 
 

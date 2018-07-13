@@ -41,6 +41,9 @@ public class RunJump : MonoBehaviour {
     private void Update()
     {
         ReducedJumpMovement();
+
+        //Dash Cooldown
+
     }
 
     public void RunRight()
@@ -51,7 +54,7 @@ public class RunJump : MonoBehaviour {
             playerT.localScale = new Vector3(1f, 1f, 1f);
             playerRB.AddForce(Vector3.right * runSpeed);
 
-            if(playerRB.velocity.x >= maxRunSpeed)
+            if (playerRB.velocity.x >= maxRunSpeed)
             {
                 playerRB.AddForce(Vector2.left * runSpeed);
             }
@@ -62,7 +65,7 @@ public class RunJump : MonoBehaviour {
         {
             playerAnim.SetBool("isRunning", false);
             playerT.localScale = new Vector3(1f, 1f, 1f);
-  
+
 
 
         }
@@ -86,7 +89,7 @@ public class RunJump : MonoBehaviour {
         {
             playerAnim.SetBool("isRunning", false);
             playerT.localScale = new Vector3(-1f, 1f, 1f);
-   
+
         }
     }
 
@@ -103,19 +106,51 @@ public class RunJump : MonoBehaviour {
         playerAnim.SetTrigger("jump");
         playerRB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
-        if(playerT.localScale.x == 1 && playerAnim.GetBool("isRunning"))
-        {
-            playerRB.AddForce(Vector2.right * forwardJumpForce, ForceMode2D.Impulse);
-        }
+        //if (playerT.localScale.x == 1 && playerAnim.GetBool("isRunning"))
+        //{
+        //    print("force right");
+        //    playerRB.AddForce(Vector2.right * forwardJumpForce, ForceMode2D.Impulse);
+        //}
 
-        if(playerT.localScale.x == -1 && playerAnim.GetBool("isRunning"))
-        {
-            playerRB.AddForce(Vector2.left * forwardJumpForce, ForceMode2D.Impulse);
-        }
+        //if (playerT.localScale.x == -1 && playerAnim.GetBool("isRunning"))
+        //{
+        //    playerRB.AddForce(Vector2.left * forwardJumpForce, ForceMode2D.Impulse);
+        //}
     }
 
 
-    private void ReducedJumpMovement()
+    /// <summary>
+    /// Move in the direction the player is facing by float (Impulse)
+    /// </summary>
+    /// <param name="dashSpeed"></param>
+    public void Dash(float dashSpeed)
+    {
+
+            playerAnim.SetBool("dashing", true);
+
+
+            if (playerT.localScale == new Vector3(1f, 1f, 1f))
+            {
+                playerRB.AddForce(Vector3.right * dashSpeed, ForceMode2D.Impulse);
+            }
+            if (playerT.localScale == new Vector3(-1f, 1f, 1f))
+
+            {
+                playerRB.AddForce(Vector2.left * dashSpeed, ForceMode2D.Impulse);
+            }
+        
+
+      
+
+    }
+    
+
+
+
+
+
+
+private void ReducedJumpMovement()
     {
         if (!groundDetectionRef.RayCastDown())
         {
@@ -145,4 +180,20 @@ public class RunJump : MonoBehaviour {
             }
         }
     }
+
+
+
+    private bool dashing;
+
+    public void DashAnimCheck(bool _bool)
+    {
+        dashing = _bool;
+
+        if (!dashing)
+        {
+            playerAnim.SetBool("dashing", false);
+        }
+
+    }
+
 }

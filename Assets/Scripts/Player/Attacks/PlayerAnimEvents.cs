@@ -6,7 +6,7 @@ public class PlayerAnimEvents : MonoBehaviour {
 
     private PlayerController controllerRef;
     private PlayerAttacks attackBoolRef;
-
+    private RunJump controlsRef;
 
     private bool
         movement,
@@ -18,6 +18,7 @@ public class PlayerAnimEvents : MonoBehaviour {
 	void Start () {
 
         controllerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        controlsRef = GameObject.FindGameObjectWithTag("PlayerReferences").GetComponent<RunJump>();
         attackBoolRef = GameObject.FindGameObjectWithTag("PlayerReferences").GetComponent<PlayerAttacks>();
 
     }
@@ -161,6 +162,20 @@ public class PlayerAnimEvents : MonoBehaviour {
 
         bool value = false;
         attackBoolRef.HeavyAerialAttack1(value);
+    }
+
+    // Dash
+
+    public void DashingStarted()
+    {
+        bool value = true;
+        controlsRef.DashAnimCheck(value);
+    }
+
+    public void DashingEnded()
+    {
+        bool value = false;
+        controlsRef.DashAnimCheck(value);
     }
 
 

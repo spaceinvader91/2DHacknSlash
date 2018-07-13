@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CustomParticleCollision : MonoBehaviour {
 
-    private PlayerCollision playerCollisionScript;
+    private PlayerCollision playerCollisionRef;
     private CustomParticles emitterScript;
 
     private float maxLifeTime, timer;
@@ -19,8 +19,9 @@ public class CustomParticleCollision : MonoBehaviour {
     {
         particleRef = this.gameObject;
         rbRef = GetComponent<Rigidbody2D>();
-        emitterScript = sourceRef.GetComponent<CustomParticles>();
-        playerCollisionScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCollision>();
+        emitterScript = GameObject.FindObjectOfType<CustomParticles>();
+        // emitterScript = sourceRef.GetComponentInChildren<CustomParticles>();
+        playerCollisionRef = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCollision>();
        
       //  this.transform.SetParent(sourceRef.transform);
         this.transform.SetParent(null);
@@ -91,8 +92,8 @@ public class CustomParticleCollision : MonoBehaviour {
 
         if (hitObject.CompareTag("Player"))
         {
-            float bulletDmg = playerCollisionScript.bulletDmg;
-            playerCollisionScript.PlayerTakeDamage(3);
+            float bulletDmg = playerCollisionRef.bulletDmg;
+            playerCollisionRef.PlayerTakeDamage(3);
 
             emitterScript.RemoveFromLists(particleRef, rbRef);
             Destroy(this.gameObject);

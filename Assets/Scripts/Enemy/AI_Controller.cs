@@ -8,7 +8,8 @@ public class AI_Controller : MonoBehaviour {
     public Transform playerChar;
     public float range, fov;
     //AI Movement Variables
-    public float patrolDistance, patrolSpeed;
+    public float patrolDistance, patrolSpeed, chaseSpeed;
+    public float maxChaseRange;
     public float destDist;
     public float fireWindow = 2f, fireRate = 0.5f, timeBetweenShots = 1.5f;
     private Vector3 start, des;
@@ -18,6 +19,7 @@ public class AI_Controller : MonoBehaviour {
     //AI Script
     private AI aiRef;
     AI_Controller aiControlRef;
+    private AI_WallRay wallScriptRef;
 
     //Particle Controls
     CustomParticles customPartRef;
@@ -38,7 +40,8 @@ public class AI_Controller : MonoBehaviour {
         aiControlRef = GetComponent<AI_Controller>();
         customPartRef = GetComponentInChildren<CustomParticles>();
         rbRef = GetComponent<Rigidbody2D>();
-
+        wallScriptRef = GetComponentInChildren<AI_WallRay>();
+        playerChar = GameObject.FindGameObjectWithTag("Player").transform;
 
         ApplyAIReferences();
 	}
@@ -55,7 +58,7 @@ public class AI_Controller : MonoBehaviour {
 
         if(isGrounded && !hitStunned && aiRef.FindPlayer())
         {
-
+            aiRef.ChasePlayer(chaseSpeed, maxChaseRange);
             aiRef.FireAtPlayer();
         }
 
@@ -79,7 +82,7 @@ public class AI_Controller : MonoBehaviour {
 
     void ApplyAIReferences()
     {
-        aiRef.GrabAIReferences(aiControlRef, rbRef, customPartRef);
+        aiRef.GrabAIReferences(aiControlRef, rbRef, customPartRef, wallScriptRef);
 
     }
 
