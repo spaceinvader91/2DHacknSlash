@@ -56,8 +56,10 @@ public class GroundDetection : MonoBehaviour {
         }
     }
 
-    public float rayDistance, rayBegin;
+    public float rayDistance, rayBegin, xOffset;
     public RaycastHit2D hit;
+    public RaycastHit2D hit2;
+    public RaycastHit2D hit3;
 
     /// <summary>
     /// Raycasts below the player, returns null if no ground is detected (needs a layer mask)
@@ -68,18 +70,28 @@ public class GroundDetection : MonoBehaviour {
 
         hit = Physics2D.Raycast(rayStart, Vector2.down, rayDistance);
 
-        if (hit.collider != null)
+        var rayStart2 = new Vector3(transform.position.x + xOffset, transform.position.y - rayBegin);
+        hit2 = Physics2D.Raycast(rayStart2, Vector2.down, rayDistance);
+
+        var rayStart3 = new Vector3(transform.position.x - xOffset, transform.position.y - rayBegin);
+        hit3 = Physics2D.Raycast(rayStart3, Vector2.down, rayDistance);
+
+        if (hit.collider != null || hit2.collider != null || hit3.collider != null)
         {
             parentAnim.SetBool("landed", true);
             grounded = true;
             Debug.DrawRay(rayStart, Vector3.down, Color.blue);
+            Debug.DrawRay(rayStart2, Vector3.down, Color.blue);
+            Debug.DrawRay(rayStart3, Vector3.down, Color.blue);
         }
 
-        if (hit.collider == null)
+        if (hit.collider == null && hit2.collider == null && hit3.collider == null)
         {
             parentAnim.SetBool("landed", false);
             grounded = false;
             Debug.DrawRay(rayStart, Vector3.down, Color.red);
+            Debug.DrawRay(rayStart2, Vector3.down, Color.red);
+            Debug.DrawRay(rayStart3, Vector3.down, Color.red);
         }
 
         return grounded;

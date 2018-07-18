@@ -19,9 +19,9 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded)
         {
-             DoubleTapDash();
-            //DoubleTapB();
+            DoubleTapDash();
         }
+
 
     }
 
@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-
+        
 
 
         if (Input.GetKeyDown(GameManager.GM.bButton))// && isGrounded)
@@ -105,6 +105,8 @@ public class PlayerController : MonoBehaviour
     }
 
 
+
+
     public float dashSpeed;
     public float dblTapFwdTime = 0.5f;  // Tap twice within this time and you will be double-tapping.
     public float lungeTime = 1.0f;
@@ -117,6 +119,7 @@ public class PlayerController : MonoBehaviour
 
     void DoubleTapDash()
     {
+
         float Horizontal = Input.GetAxisRaw("DPadX");
         // disable double-tapping after a short time limit	
         if (Time.time > lastTapFwdTime + dblTapFwdTime)

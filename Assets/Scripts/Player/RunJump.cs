@@ -90,6 +90,7 @@ public class RunJump : MonoBehaviour {
             playerAnim.SetBool("isRunning", false);
             playerT.localScale = new Vector3(-1f, 1f, 1f);
 
+
         }
     }
 
@@ -106,16 +107,7 @@ public class RunJump : MonoBehaviour {
         playerAnim.SetTrigger("jump");
         playerRB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
-        //if (playerT.localScale.x == 1 && playerAnim.GetBool("isRunning"))
-        //{
-        //    print("force right");
-        //    playerRB.AddForce(Vector2.right * forwardJumpForce, ForceMode2D.Impulse);
-        //}
 
-        //if (playerT.localScale.x == -1 && playerAnim.GetBool("isRunning"))
-        //{
-        //    playerRB.AddForce(Vector2.left * forwardJumpForce, ForceMode2D.Impulse);
-        //}
     }
 
 
@@ -127,6 +119,8 @@ public class RunJump : MonoBehaviour {
     {
 
             playerAnim.SetBool("dashing", true);
+
+        playerAnim.SetBool("isLaunching", false);
 
 
             if (playerT.localScale == new Vector3(1f, 1f, 1f))
