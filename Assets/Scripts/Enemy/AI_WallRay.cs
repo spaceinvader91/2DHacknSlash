@@ -10,12 +10,49 @@ public class AI_WallRay : MonoBehaviour {
     private RaycastHit2D hit;
     private Transform objectT;
     public float yOrigin, rayDistance, xOrigin = 1;
+    public float yOriginForward;
 
-    
+
+
 
     private void Update()
     {
         PlatformRayCast();
+        ForwardWallCast();
+    }
+
+    public bool ForwardWallCast()
+    {
+        var rayStart = new Vector2(transform.position.x - yOriginForward, transform.position.y + yOriginForward);
+        var rayDir =  Vector2.left;
+
+
+        if (this.transform.localScale.x < 0)
+        {
+             rayStart = new Vector2(transform.position.x + yOriginForward, transform.position.y + yOriginForward);
+             rayDir =  Vector2.right;
+        }
+
+        if (hit.collider != null)
+        {
+            if (hit.collider.gameObject.CompareTag("Ground"))
+            {
+                Debug.DrawRay(rayStart, rayDir, Color.blue);
+                return true;
+            }
+
+            return false;
+        }
+
+
+        else
+        {
+            Debug.DrawRay(rayStart, rayDir, Color.black);
+
+            return false;
+        }
+
+
     }
 
     public bool PlatformRayCast()

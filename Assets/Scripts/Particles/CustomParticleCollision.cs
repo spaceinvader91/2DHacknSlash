@@ -83,7 +83,7 @@ public class CustomParticleCollision : MonoBehaviour {
         {
             var newDir = sourceRef.transform.position - transform.position;
             rbRef.velocity = Vector2.zero;
-            rbRef.AddForce(newDir.normalized*20f , ForceMode2D.Impulse);
+            rbRef.AddForce(newDir.normalized * 20f, ForceMode2D.Impulse);
 
             ChangeParticleColor();
             ChangeTrailColor();
@@ -104,6 +104,19 @@ public class CustomParticleCollision : MonoBehaviour {
 
             print("Enemy");
             //Hurt enemy method goes here
+
+            emitterScript.RemoveFromLists(particleRef, rbRef);
+            Destroy(this.gameObject);
+
+        }
+
+        if (hitObject.CompareTag("Block"))
+        {
+
+            print("Blocked");
+            var hitPos = hitObject.transform.position;
+
+            playerCollisionRef.BlockCollision(hitPos);
 
             emitterScript.RemoveFromLists(particleRef, rbRef);
             Destroy(this.gameObject);

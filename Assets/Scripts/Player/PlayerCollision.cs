@@ -8,7 +8,7 @@ public class PlayerCollision : MonoBehaviour {
     private PlayerHitPhysics playerPhysicsRef;
 
     [SerializeField]
-    private GameObject hitParticle, deathParticle;
+    private GameObject hitParticle, deathParticle, blockParticle;
     [SerializeField]
     private float playerHP = 100;
 
@@ -44,6 +44,13 @@ public class PlayerCollision : MonoBehaviour {
         }
 
 
+
+    }
+
+    public void BlockCollision(Vector3 hitPos)
+    {
+
+        GameObject particleClone = Instantiate(blockParticle, hitPos, Quaternion.identity);
 
     }
 

@@ -22,17 +22,18 @@ public class ParallaxScrolling : MonoBehaviour {
     void CamDirection()
     {
 
-        print("cam velocity = " + mainCam.velocity.x);
-
         var cam_xVel = mainCam.velocity.x;
+        var cam_yVel = mainCam.velocity.y;
        
 
         for (int i = 0; i < backgroundElements.Count; i++)
         {
             var backgroundPosZ = backgroundElements[i].transform.position.z;
-            var newBackgroundPos = (cam_xVel / 150) * (backgroundPosZ/10 );
+            var newBackgroundPosX = (cam_xVel / 150) * (backgroundPosZ / 10);
+            var newBackgroundPosY = (cam_yVel / 150) * (backgroundPosZ / 10);
 
-            backgroundElements[i].transform.position = new Vector3(backgroundElements[i].transform.position.x - newBackgroundPos, backgroundElements[i].transform.position.y, backgroundElements[i].transform.position.z);
+            backgroundElements[i].transform.position = new Vector3(backgroundElements[i].transform.position.x - newBackgroundPosX, backgroundElements[i].transform.position.y - newBackgroundPosY, backgroundElements[i].transform.position.z);
+
 
 
         }

@@ -53,6 +53,7 @@ public class CameraFollow : MonoBehaviour
 
             Vector3 destination = transform.position + delta;
 
+            //right
             if (currentPlayerScale.x > 0)
             {
                 destination = destination + offset;
@@ -60,10 +61,12 @@ public class CameraFollow : MonoBehaviour
                 transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
             }
 
+            //left
             else if (currentPlayerScale.x < 0)
             {
-                destination = destination + -offset;
-                destination = new Vector3(destination.x, offset.y + destination.y, -10);
+                destination.x = destination.x - offset.x;
+                destination.y = destination.y + offset.y;
+                destination = new Vector3(destination.x,offset.y + destination.y, -10);
                 transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
             }
         }
