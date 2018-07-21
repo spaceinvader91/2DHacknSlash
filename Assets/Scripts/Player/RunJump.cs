@@ -9,6 +9,7 @@ public class RunJump : MonoBehaviour {
     private Transform playerT;
     private Animator playerAnim;
     public Rigidbody2D playerRB;
+    public float localScale = 1f;
 
     //cache
     private GroundDetection groundDetectionRef;
@@ -51,7 +52,7 @@ public class RunJump : MonoBehaviour {
         if (groundDetectionRef.RayCastDown())
         {
             playerAnim.SetBool("isRunning", true);
-            playerT.localScale = new Vector3(1f, 1f, 1f);
+            playerT.localScale = new Vector3(localScale, localScale, 1f);
             playerRB.AddForce(Vector3.right * runSpeed);
 
             if (playerRB.velocity.x >= maxRunSpeed)
@@ -64,7 +65,7 @@ public class RunJump : MonoBehaviour {
         if (!groundDetectionRef.RayCastDown())
         {
             playerAnim.SetBool("isRunning", false);
-            playerT.localScale = new Vector3(1f, 1f, 1f);
+            playerT.localScale = new Vector3(localScale, localScale, 1f);
 
 
 
@@ -76,7 +77,7 @@ public class RunJump : MonoBehaviour {
         if (groundDetectionRef.RayCastDown())
         {
             playerAnim.SetBool("isRunning", true);
-            playerT.localScale = new Vector3(-1f, 1f, 1f);
+            playerT.localScale = new Vector3(-localScale, localScale, 1f);
             playerRB.AddRelativeForce(Vector2.left * runSpeed);
 
             if (playerRB.velocity.x <= -maxRunSpeed)
@@ -88,7 +89,7 @@ public class RunJump : MonoBehaviour {
         if (!groundDetectionRef.RayCastDown())
         {
             playerAnim.SetBool("isRunning", false);
-            playerT.localScale = new Vector3(-1f, 1f, 1f);
+            playerT.localScale = new Vector3(-localScale, localScale, 1f);
 
 
         }
@@ -123,11 +124,11 @@ public class RunJump : MonoBehaviour {
         playerAnim.SetBool("isLaunching", false);
 
 
-            if (playerT.localScale == new Vector3(1f, 1f, 1f))
+            if (playerT.localScale == new Vector3(localScale, localScale, 1f))
             {
                 playerRB.AddForce(Vector3.right * dashSpeed, ForceMode2D.Impulse);
             }
-            if (playerT.localScale == new Vector3(-1f, 1f, 1f))
+            if (playerT.localScale == new Vector3(-localScale, localScale, 1f))
 
             {
                 playerRB.AddForce(Vector2.left * dashSpeed, ForceMode2D.Impulse);
@@ -137,9 +138,6 @@ public class RunJump : MonoBehaviour {
       
 
     }
-    
-
-
 
 
 
@@ -148,7 +146,7 @@ private void ReducedJumpMovement()
     {
         if (!groundDetectionRef.RayCastDown())
         {
-            if (playerT.localScale.x == 1)
+            if (playerT.localScale.x == localScale)
             {
                 playerAnim.SetBool("isRunning", false);
                 playerRB.AddForce(Vector2.right * reducedRunSpeed);
@@ -161,7 +159,7 @@ private void ReducedJumpMovement()
 
             }
 
-            if (playerT.localScale.x == -1)
+            if (playerT.localScale.x == -localScale)
             {
                 playerAnim.SetBool("isRunning", false);
                 playerRB.AddForce(Vector2.left * reducedRunSpeed);
@@ -173,6 +171,23 @@ private void ReducedJumpMovement()
 
             }
         }
+    }
+
+    private bool crouching;
+
+    public void CrouchAnimCheck(bool _bool)
+    {
+        crouching = _bool;
+
+        if (crouching)
+        {
+            playerAnim.SetBool("isCrouching", true);
+        }
+        else
+        {
+            playerAnim.SetBool("isCrouching", false);
+        }
+
     }
 
 

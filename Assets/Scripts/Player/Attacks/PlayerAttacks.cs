@@ -32,6 +32,7 @@ public class PlayerAttacks : MonoBehaviour {
         if (isGrounded)
         {
             GroundAttacks();
+            StandBlock();
         }
 
         if (!isGrounded)
@@ -57,12 +58,14 @@ public class PlayerAttacks : MonoBehaviour {
         //
 
         //Punch Attack -- A Button
-        if (Input.GetKeyDown(GameManager.GM.aButton)
+        if (Input.GetKeyDown(GameManager.GM.xButton)
             && verticalAxis == 0
             && horizontalAxis == 0
-            && !isLightAttacking)
+            && !isLightAttacking
+            && !isHeavyAttacking
+            && !isLaunching)
         {
-            parentAnim.SetBool("lightAttacking", true);
+            parentAnim.SetBool("lightAttack1", true);
         }
 
         //
@@ -70,8 +73,10 @@ public class PlayerAttacks : MonoBehaviour {
         //
 
         // X Button
-        if (Input.GetKeyDown(GameManager.GM.xButton)
-             && verticalAxis <= 0)
+        if (Input.GetKeyDown(GameManager.GM.yButton)
+            && !isLightAttacking
+            && !isHeavyAttacking
+            && !isLaunching)
 
         {
             parentAnim.SetBool("heavyAttacking", true);
@@ -80,7 +85,7 @@ public class PlayerAttacks : MonoBehaviour {
 
 
         // X 2nd press
-        if (Input.GetKeyDown(GameManager.GM.xButton)
+        if (Input.GetKeyDown(GameManager.GM.yButton)
             && isHeavyAttacking)
 
 
@@ -93,20 +98,9 @@ public class PlayerAttacks : MonoBehaviour {
         // Launcher Attacks
         //
 
-        // X + Up --After a heavy attack
-        if (Input.GetKeyDown(GameManager.GM.xButton)
-            && verticalAxis > 0
-            && isHeavyAttacking)
-        {
-            parentAnim.SetBool("isLaunching", true);
-        }
 
-
-
-        // X + Up --After a heavy attack 2
-        if (Input.GetKeyDown(GameManager.GM.xButton)
-            && verticalAxis > 0
-            && isHeavyAttacking2)
+        // B Button
+        if (Input.GetKeyDown(GameManager.GM.bButton))
         {
             parentAnim.SetBool("isLaunching", true);
         }
@@ -142,6 +136,29 @@ public class PlayerAttacks : MonoBehaviour {
 
     }
 
+    //
+    // Block
+    //
+
+    void StandBlock()
+    {
+        var horizontalAxis = Input.GetAxis("DPadX");
+        var verticalAxis = Input.GetAxis("DPadY");
+
+
+        //LB and not crouching = stand block
+        if (verticalAxis >= 0 && Input.GetKey(GameManager.GM.lbButton))
+        {
+            parentAnim.SetBool("isBlocking", true);
+        }
+
+        else
+        {
+            parentAnim.SetBool("isBlocking", false);
+        }
+
+    }
+
 
 
     //
@@ -160,7 +177,7 @@ public class PlayerAttacks : MonoBehaviour {
 
         if (!isLightAttacking)
         {
-            parentAnim.SetBool("lightAttacking", false);
+            parentAnim.SetBool("lightAttack1", false);
         }
     }
 

@@ -179,6 +179,19 @@ public class PlayerAnimEvents : MonoBehaviour {
     }
 
 
+    public void CrouchingStarted()
+    {
+        bool value = true;
+        controlsRef.CrouchAnimCheck(value);
+    }
+
+    public void CrouchingEnded()
+    {
+        bool value = false;
+        controlsRef.CrouchAnimCheck(value);
+    }
+
+
 
     //
     // Track when player enters Idle - Reset Combo Count.

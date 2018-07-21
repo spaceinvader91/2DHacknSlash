@@ -9,6 +9,7 @@ public class CameraFollow : MonoBehaviour
     public Vector3 offset = new Vector3(0.5f, 0.2f, 0);
 
     private Vector3 velocity = Vector3.zero;
+    private Vector3 currentPlayerScale;
     public Transform target;
     public Camera cam;
 
@@ -17,14 +18,15 @@ public class CameraFollow : MonoBehaviour
 
     private void Start()
     {
-  
+       
     }
     void Update()
     {
         //ReduceSnap();
         FollowPlayer();
-       // CapCamSpeed();
-    
+        currentPlayerScale = target.localScale;
+        // CapCamSpeed();
+
     }
 
     void CapCamSpeed()
@@ -51,14 +53,14 @@ public class CameraFollow : MonoBehaviour
 
             Vector3 destination = transform.position + delta;
 
-            if (target.localScale == new Vector3(1f, 1f, 1f))
+            if (currentPlayerScale.x > 0)
             {
                 destination = destination + offset;
                destination = new Vector3(destination.x, offset.y + destination.y, -10);
                 transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
             }
 
-            else if (target.localScale == new Vector3(-1f, 1f, 1f))
+            else if (currentPlayerScale.x < 0)
             {
                 destination = destination + -offset;
                 destination = new Vector3(destination.x, offset.y + destination.y, -10);

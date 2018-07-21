@@ -55,7 +55,6 @@ public class AI : MonoBehaviour {
     private void Update()
     {
         LimitMoveSpeed();
-      //  JumpCheck();
     }
 
 
@@ -66,16 +65,18 @@ public class AI : MonoBehaviour {
     /// <summary>
     /// Face the enemy towards the selected target
     /// </summary>
+    /// 
+    public float scalingValue = 1;
     public void FacePlayer()
     {
         if (playerChar.position.x < transform.position.x)
         {
-            transform.localScale = new Vector3(1, 1, 1);
+            transform.localScale = new Vector3(scalingValue, scalingValue,1);
         }
 
         if (playerChar.position.x > transform.position.x)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.localScale = new Vector3(-scalingValue,scalingValue,1);
         }
 
 
@@ -125,13 +126,13 @@ public class AI : MonoBehaviour {
         if (transform.position.x <= start.x)
         {
             moveRight = true;
-            transform.localScale = new Vector3(1f, 1f, 1f);
+            transform.localScale = new Vector3(scalingValue,scalingValue, 1f);
         }
 
         if (transform.position.x >= des.x)
         {
             moveRight = false;
-            transform.localScale = new Vector3(-1f, 1f, 1f);
+            transform.localScale = new Vector3(scalingValue,scalingValue, 1f);
         }
 
         if (moveRight)

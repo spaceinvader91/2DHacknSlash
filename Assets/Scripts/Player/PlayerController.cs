@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             DoubleTapDash();
+            CrouchControls();
         }
 
 
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviour
             if (dPadHorizontalAxis > 0)
             {
                 runJumpRef.RunRight();
+          
 
 
 
@@ -74,7 +76,7 @@ public class PlayerController : MonoBehaviour
             if (dPadHorizontalAxis < 0)
             {
                 runJumpRef.RunLeft();
-
+  
 
             }
 
@@ -86,13 +88,14 @@ public class PlayerController : MonoBehaviour
 
     
             runJumpRef.RunStop();
+  
         }
 
 
         
 
 
-        if (Input.GetKeyDown(GameManager.GM.bButton))// && isGrounded)
+        if (Input.GetKeyDown(GameManager.GM.aButton))// && isGrounded)
         {
 
             isGrounded = false;
@@ -102,6 +105,22 @@ public class PlayerController : MonoBehaviour
 
 
 
+    }
+
+    void CrouchControls()
+    {
+        float dPadVerticalAxis = Input.GetAxisRaw("DPadY");
+        
+
+        if (dPadVerticalAxis < 0)
+        {
+            runJumpRef.CrouchAnimCheck(true);
+        }
+
+        else
+        {
+            runJumpRef.CrouchAnimCheck(false);
+        }
     }
 
 
