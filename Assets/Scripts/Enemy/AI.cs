@@ -9,6 +9,8 @@ public class AI : MonoBehaviour {
     public  AI_WallRay aiWallRay;
     private AI_Controller aiControlRef;
     private CustomParticles particlControlRef;
+    private TokenController tokenControlRef;
+ 
     private Rigidbody2D rb;
     private Transform playerChar;
     private float range, fov;
@@ -27,12 +29,14 @@ public class AI : MonoBehaviour {
     /// <param name="aiControl"></param>
     /// <param name="rbRef"></param>
     /// <param name="cusPart"></param>
-    public void GrabAIReferences(AI_Controller aiControl, Rigidbody2D rbRef, CustomParticles cusPart, AI_WallRay aiRay)
+    public void GrabAIReferences(AI_Controller aiControl, Rigidbody2D rbRef, CustomParticles cusPart, AI_WallRay aiRay, TokenController token)
     {
         aiControlRef = aiControl;
         rb = rbRef;
         particlControlRef = cusPart;
         aiWallRay = aiRay;
+        tokenControlRef = token;
+
     }
 
     /// <summary>
@@ -181,6 +185,7 @@ public class AI : MonoBehaviour {
         else
         {
             playerInRange = false;
+
         }
         return playerInRange;
 
@@ -222,6 +227,26 @@ public class AI : MonoBehaviour {
         }
 
 
+    }
+
+    public bool lightAttackToken;
+
+    public bool LightAttackToken()
+    {
+
+
+        if (!lightAttackToken)
+        {
+            if (tokenControlRef.RequestLightAttack())
+            {
+                lightAttackToken = true;
+                return lightAttackToken;
+            }
+
+            return lightAttackToken;
+        }
+
+        return lightAttackToken;
     }
 
     /// <summary>

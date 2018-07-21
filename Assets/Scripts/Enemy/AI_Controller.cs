@@ -24,8 +24,14 @@ public class AI_Controller : MonoBehaviour {
     //Particle Controls
     CustomParticles customPartRef;
 
+    //Token Controls
+    private TokenController tokenControl;
+
     //RigidBody
     Rigidbody2D rbRef;
+
+    //Track token return
+    private bool haveToken;
 
 
     // Use this for initialization
@@ -42,6 +48,7 @@ public class AI_Controller : MonoBehaviour {
         rbRef = GetComponent<Rigidbody2D>();
         wallScriptRef = GetComponentInChildren<AI_WallRay>();
         playerChar = GameObject.FindGameObjectWithTag("Player").transform;
+        tokenControl = GameObject.FindGameObjectWithTag("PlayerReferences").GetComponent<TokenController>();
 
         ApplyAIReferences();
 	}
@@ -59,7 +66,23 @@ public class AI_Controller : MonoBehaviour {
         if(isGrounded && !hitStunned && aiRef.FindPlayer())
         {
             aiRef.ChasePlayer(chaseSpeed, maxChaseRange);
-            aiRef.FireAtPlayer();
+
+
+
+            //Request Token
+            if (aiRef.LightAttackToken())
+            {
+                haveToken = true;
+                aiRef.FireAtPlayer();
+            }
+          
+        }
+
+        if (!aiRef.FindPlayer() && haveToken)
+        {
+
+            tokenControl.ReturnTokens(0);
+            haveToken = false;
         }
 
 
@@ -82,7 +105,7 @@ public class AI_Controller : MonoBehaviour {
 
     void ApplyAIReferences()
     {
-        aiRef.GrabAIReferences(aiControlRef, rbRef, customPartRef, wallScriptRef);
+        aiRef.GrabAIReferences(aiControlRef, rbRef, customPartRef, wallScriptRef, tokenControl);
 
     }
 
