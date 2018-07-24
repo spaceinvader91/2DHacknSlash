@@ -23,6 +23,12 @@ public class PlayerController : MonoBehaviour
             CrouchControls();
         }
 
+        if (!isGrounded)
+        {
+            AerialJumpCheck();
+
+        }
+
 
     }
 
@@ -52,32 +58,25 @@ public class PlayerController : MonoBehaviour
 
     //Move Left/Right
     //
+    private float jumpCount;
     void Movement()
     {
-
         //Run Method (RunJump.cs)
         float dPadHorizontalAxis = Input.GetAxisRaw("DPadX");
 
         if(dPadHorizontalAxis > 0 || dPadHorizontalAxis < 0) 
         {
 
-
             //Run Right
             if (dPadHorizontalAxis > 0)
             {
                 runJumpRef.RunRight();
-          
-
-
-
             }
 
             //Run Left
             if (dPadHorizontalAxis < 0)
             {
                 runJumpRef.RunLeft();
-  
-
             }
 
         }
@@ -92,25 +91,21 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        
-
-
-        if (Input.GetKeyDown(GameManager.GM.aButton))// && isGrounded)
+        if (Input.GetKeyDown(GameManager.GM.aButton) && isGrounded)
         {
 
             isGrounded = false;
             runJumpRef.Jump();
+
         }
-
-
-
-
     }
+
+    
 
     void CrouchControls()
     {
         float dPadVerticalAxis = Input.GetAxisRaw("DPadY");
-        
+
 
         if (dPadVerticalAxis < 0)
         {
@@ -123,9 +118,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void AerialJumpCheck()
+    {
+        if (Input.GetKeyDown(GameManager.GM.aButton))
+        {
+            runJumpRef.WallJump();
+            runJumpRef.DoubleJump(doubleJumpForce);
+        }
 
 
+    }
 
+
+    public float doubleJumpForce = 3f;
     public float dashSpeed;
     public float dblTapFwdTime = 0.5f;  // Tap twice within this time and you will be double-tapping.
     public float lungeTime = 1.0f;
@@ -206,6 +211,14 @@ public void GroundCheckBool(bool _bool)
         //Communicate with the attack script that the player has hit the ground
         _attacks.GroundDetection(_bool);
 
+        //Reset Wall Jump Count
+        if (isGrounded)
+        {
+            runJumpRef.wallJumpCount = 0;
+            runJumpRef.jumpCount = 0;
+
+        }
+    
 
     }
 

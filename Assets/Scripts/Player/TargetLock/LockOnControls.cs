@@ -63,23 +63,32 @@ public class LockOnControls : MonoBehaviour
         }
 
         //Tap RB To Switch Targets
-        if (Input.GetKeyUp(GameManager.GM.rbButton))
+        if (Input.GetKey(GameManager.GM.rbButton))
 
         {
+            Time.timeScale = 0.5f;
 
+            if (Input.GetKeyDown(GameManager.GM.xButton))
+            {
 
-            if (lockedEnemy == nearByEnemies.Count - 1 && !dashRef.RB_LongPress())
-            {
-                //If End Of List Has Been Reached, Start Over
-                lockedEnemy = 0;
-                target = nearByEnemies[lockedEnemy];
+                if (lockedEnemy == nearByEnemies.Count - 1)
+                {
+                    //If End Of List Has Been Reached, Start Over
+                    lockedEnemy = 0;
+                    target = nearByEnemies[lockedEnemy];
+                }
+                else
+                {
+                    //Move To Next Enemy In List
+                    lockedEnemy++;
+                    target = nearByEnemies[lockedEnemy];
+                }
             }
-            else
-            {
-                //Move To Next Enemy In List
-                lockedEnemy++;
-                target = nearByEnemies[lockedEnemy];
-            }
+        }
+
+        if (Input.GetKeyUp(GameManager.GM.rbButton))
+        {
+            Time.timeScale = 1;
         }
 
         if (lockedOn)
@@ -99,9 +108,11 @@ public class LockOnControls : MonoBehaviour
 
             // use double tap attack to dash?
             //rb  = dash to target
-            if (Input.GetKeyDown(GameManager.GM.lbButton))
+            if (Input.GetKeyDown(GameManager.GM.aButton))
             {
+               
                 var targetPos = new Vector3(target.transform.position.x - 0.5f, target.transform.position.y);
+                print("dash" + targetPos);
                 dashRef.Dash(targetPos);
             }
 

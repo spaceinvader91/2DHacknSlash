@@ -19,7 +19,7 @@ public class AI_Controller : MonoBehaviour {
     //AI Script
     private AI aiRef;
     AI_Controller aiControlRef;
-    private AI_WallRay wallScriptRef;
+    private AI_WallRay aiWallRayRef;
 
     //Particle Controls
     CustomParticles customPartRef;
@@ -46,7 +46,7 @@ public class AI_Controller : MonoBehaviour {
         aiControlRef = GetComponent<AI_Controller>();
         customPartRef = GetComponentInChildren<CustomParticles>();
         rbRef = GetComponent<Rigidbody2D>();
-        wallScriptRef = GetComponentInChildren<AI_WallRay>();
+        aiWallRayRef = GetComponentInChildren<AI_WallRay>();
         playerChar = GameObject.FindGameObjectWithTag("Player").transform;
         tokenControl = GameObject.FindGameObjectWithTag("PlayerReferences").GetComponent<TokenController>();
 
@@ -89,7 +89,6 @@ public class AI_Controller : MonoBehaviour {
 
             HitStunTimer();
         GroundCheckBool();
-
         ApplyAISettings();
 		
 	}
@@ -105,7 +104,7 @@ public class AI_Controller : MonoBehaviour {
 
     void ApplyAIReferences()
     {
-        aiRef.GrabAIReferences(aiControlRef, rbRef, customPartRef, wallScriptRef, tokenControl);
+        aiRef.GrabAIReferences(aiControlRef, rbRef, customPartRef, aiWallRayRef, tokenControl);
 
     }
 
@@ -218,7 +217,6 @@ public class AI_Controller : MonoBehaviour {
             }
 
         }
-
 
     }
 

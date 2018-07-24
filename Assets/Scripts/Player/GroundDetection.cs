@@ -28,6 +28,7 @@ public class GroundDetection : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+       // RayCastForward();
         RayCastDown();
         GroundSwitch();
     }
@@ -44,7 +45,7 @@ public class GroundDetection : MonoBehaviour {
             bool hitGround = true;
             controllerRef.GroundCheckBool(hitGround);
             //Set the ground as the parent
-            playerObject.transform.SetParent(hit.collider.transform.parent);
+           // playerObject.transform.SetParent(hit.collider.transform.parent);
         }
 
         if (!grounded)
@@ -95,6 +96,45 @@ public class GroundDetection : MonoBehaviour {
         }
 
         return grounded;
+
+    }
+
+
+
+    public float forwardRayStart = 1, forwardRayHeight;
+    public bool RayCastForward()
+    {
+
+        var parentTransform = this.transform;
+        var rayStart = new Vector3(transform.position.x + forwardRayStart, transform.position.y - forwardRayHeight);
+        RaycastHit2D forwardHit = Physics2D.Raycast(rayStart, Vector2.right, rayDistance);
+
+        if (parentTransform.localScale.x < 0)
+        {
+            rayStart = new Vector3(transform.position.x - forwardRayStart, transform.position.y - forwardRayHeight);
+            forwardHit = Physics2D.Raycast(rayStart, Vector2.left, rayDistance);
+        }
+
+        if (forwardHit.collider != null)
+        {
+            if (forwardHit.collider.gameObject.CompareTag("Wall"))
+            {
+                Debug.DrawRay(rayStart, Vector3.down, Color.blue);
+                return true;
+            }
+
+            return false;
+        }
+
+        if (forwardHit.collider == null)
+        {
+            Debug.DrawRay(rayStart, Vector3.down, Color.red);
+            return false;
+        }
+
+        return false;
+
+
 
     }
 

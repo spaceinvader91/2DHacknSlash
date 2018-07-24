@@ -98,9 +98,15 @@ public class CustomParticles : MonoBehaviour {
     {
         foreach (Rigidbody2D particle in particleRBs)
         {
+            if (particle != null)
+            {
+                particle.AddForce(particle.transform.up * velocityOverLiftime);
+            }
 
-            particle.AddForce(particle.transform.up * velocityOverLiftime);
-
+            else
+            {
+                return;
+            }
         }
     }
 
@@ -109,10 +115,18 @@ public class CustomParticles : MonoBehaviour {
 
         foreach (Rigidbody2D particle in particleRBs)
         {
+            if (particle != null)
+            {
 
-            particle.mass = rbMass;
-            particle.gravityScale = rbGravity;
-            particle.freezeRotation = rbFreezeRoation;
+                particle.mass = rbMass;
+                particle.gravityScale = rbGravity;
+                particle.freezeRotation = rbFreezeRoation;
+            }
+
+            else
+            {
+                return;
+            }
 
         }
 
@@ -176,10 +190,19 @@ public class CustomParticles : MonoBehaviour {
         foreach (GameObject particle in aliveParticles)
         {
 
-            particleScriptRef = particle.GetComponent<CustomParticleCollision>();
-            //Run methods attached to each particle to adjust appearance.Minimise use of .GetComponent
-            particleScriptRef.SetParticleLifeTime(particleMaxLifeTime);
-            
+            if (particle != null)
+            {
+                particleScriptRef = particle.GetComponent<CustomParticleCollision>();
+                //Run methods attached to each particle to adjust appearance.Minimise use of .GetComponent
+                particleScriptRef.SetParticleLifeTime(particleMaxLifeTime);
+            }
+
+            else
+            {
+                return;
+            }
+
+
         }
 
 

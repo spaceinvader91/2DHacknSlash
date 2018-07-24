@@ -47,6 +47,11 @@ public class RunJump : MonoBehaviour {
 
     }
 
+    private void FixedUpdate()
+    {
+        LimitXMovementSpeed();
+    }
+
     public void RunRight()
     {
         if (groundDetectionRef.RayCastDown())
@@ -55,10 +60,10 @@ public class RunJump : MonoBehaviour {
             playerT.localScale = new Vector3(localScale, localScale, 1f);
             playerRB.AddForce(Vector3.right * runSpeed);
 
-            if (playerRB.velocity.x >= maxRunSpeed)
-            {
-                playerRB.AddForce(Vector2.left * runSpeed);
-            }
+            //if (playerRB.velocity.x >= maxRunSpeed)
+            //{
+            //    playerRB.AddForce(Vector2.left * runSpeed);
+            //}
 
         }
 
@@ -71,6 +76,8 @@ public class RunJump : MonoBehaviour {
 
         }
     }
+
+    //restrict x velocity relative to direction of travel
 
     public void RunLeft()
     {
@@ -80,10 +87,7 @@ public class RunJump : MonoBehaviour {
             playerT.localScale = new Vector3(-localScale, localScale, 1f);
             playerRB.AddRelativeForce(Vector2.left * runSpeed);
 
-            if (playerRB.velocity.x <= -maxRunSpeed)
-            {
-                playerRB.AddForce(Vector2.right * runSpeed);
-            }
+
         }
 
         if (!groundDetectionRef.RayCastDown())
@@ -94,6 +98,31 @@ public class RunJump : MonoBehaviour {
 
         }
     }
+
+    void LimitXMovementSpeed()
+    {
+        var currentVelocity = playerRB.velocity;
+        print("current velocity x " + currentVelocity.x);
+
+        if (playerRB.velocity.x > 0)
+        {
+
+            if (playerRB.velocity.x >= maxRunSpeed)
+            {
+                print("too fast");
+                playerRB.AddForce(Vector2.left * (currentVelocity.x *10));
+            }
+        }
+
+        if (playerRB.velocity.x < 0)
+        {
+            if (playerRB.velocity.x <= -maxRunSpeed)
+            {
+                playerRB.AddForce(Vector2.right * (-currentVelocity.x * 10));
+            }
+        }
+    }
+    
 
     public void RunStop()
     {
@@ -109,6 +138,18 @@ public class RunJump : MonoBehaviour {
         playerRB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
 
+    }
+
+
+    public int jumpCount;
+    public void DoubleJump(float jumpForce)
+    {
+        if (!groundDetectionRef.RayCastForward() && !groundDetectionRef.grounded && jumpCount == 0)
+        {
+            jumpCount++;
+            playerAnim.SetTrigger("jump");
+            playerRB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
     }
 
 
@@ -138,6 +179,34 @@ public class RunJump : MonoBehaviour {
       
 
     }
+
+
+    public int wallJumpCount, maxWallJumps = 2;
+    public void WallJump()
+    {
+        if (groundDetectionRef.RayCastForward() && !groundDetectionRef.grounded)
+        {
+
+
+                if (wallJumpCount <= maxWallJumps)
+                {
+                    wallJumpCount++;
+
+                playerRB.AddForce(Vector2.up * jumpForce * 1.3f, ForceMode2D.Impulse);
+                }
+
+                
+
+                else
+                {
+                    print("Max Wall Jumps");
+                }
+
+            }
+
+
+        }
+    
 
 
 

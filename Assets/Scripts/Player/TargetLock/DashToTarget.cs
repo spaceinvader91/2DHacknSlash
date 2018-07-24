@@ -59,10 +59,10 @@ public class DashToTarget : MonoBehaviour {
 
                 //  Vector3 dir = Quaternion.Euler(target.x, target.y, target.z) ;
 
-                print(cross);
+   
 
                 anim.SetBool("landed", false);
-                playerTransform.DOMove(target, dashSpeed, snapping: false).SetEase(Ease.OutBounce);
+
 
                 DashMeter(-dashCost);
            }

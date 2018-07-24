@@ -7,35 +7,37 @@ using UnityEngine;
 public class AI_WallRay : MonoBehaviour {
 
 
-    private RaycastHit2D hit;
+    private RaycastHit2D hit, forwardHit;
     private Transform objectT;
     public float yOrigin, rayDistance, xOrigin = 1;
-    public float yOriginForward;
+    public float xOffset = 0.5f;
 
 
 
 
     private void Update()
     {
-        PlatformRayCast();
+        //PlatformRayCast();
         ForwardWallCast();
     }
 
     public bool ForwardWallCast()
     {
-        var rayStart = new Vector2(transform.position.x - yOriginForward, transform.position.y + yOriginForward);
-        var rayDir =  Vector2.left;
+        var rayStart = new Vector2(transform.position.x - xOffset, transform.position.y);
+        var rayDir =  Vector2.right;
 
 
         if (this.transform.localScale.x < 0)
         {
-             rayStart = new Vector2(transform.position.x + yOriginForward, transform.position.y + yOriginForward);
-             rayDir =  Vector2.right;
+             rayStart = new Vector2(transform.position.x + xOffset, transform.position.y );
+             rayDir =  Vector2.left;
         }
 
-        if (hit.collider != null)
+        forwardHit = Physics2D.Raycast(rayStart, rayDir, rayDistance);
+
+        if (forwardHit.collider != null)
         {
-            if (hit.collider.gameObject.CompareTag("Ground"))
+            if (forwardHit.collider.gameObject.CompareTag("Ground"))
             {
                 Debug.DrawRay(rayStart, rayDir, Color.blue);
                 return true;

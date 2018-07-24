@@ -6,6 +6,7 @@ public class AI : MonoBehaviour {
 
     public GameObject customParticleSystem;
 
+    public float maxMoveSpeed;
     public  AI_WallRay aiWallRay;
     private AI_Controller aiControlRef;
     private CustomParticles particlControlRef;
@@ -104,16 +105,37 @@ public class AI : MonoBehaviour {
 
     void LimitMoveSpeed()
     {
-        if (rb.velocity.x > 5)
+        if (rb.velocity.x > maxMoveSpeed)
         {
-            rb.AddForce(Vector2.left * (_speed));
+            rb.AddForce(Vector2.left * (rb.velocity.x));
         }
 
-        if (rb.velocity.x < -5)
+        if (rb.velocity.x < -maxMoveSpeed)
         {
-            rb.AddForce(Vector2.right * (_speed));
+            rb.AddForce(Vector2.right * (rb.velocity.x));
         }
 
+    }
+
+
+    /// <summary>
+    /// Jump forward - takes forward force and upward force
+    /// </summary>
+    /// <param name="force"></param>
+    public void JumpForward(float forwardForce, float upwardForce)
+    {
+        //Upwards Force
+        rb.AddForce(Vector2.up * upwardForce, ForceMode2D.Impulse);
+
+        //Jump left
+        if (transform.localScale.x < 0)
+        {
+            rb.AddForce(Vector2.left * forwardForce);
+        }
+        else
+        {
+            rb.AddForce(Vector2.right * forwardForce);
+        }
     }
 
 
@@ -166,7 +188,7 @@ public class AI : MonoBehaviour {
         angleLeft = Vector2.Angle(Vector3.left, playerChar.position - transform.position);
 
 
-        //If the player is within range, swing sword (sword range = 1)
+        //If the player is within range
         if (distanceToPlayer < range)  //range = known float
         {
 
@@ -178,6 +200,7 @@ public class AI : MonoBehaviour {
                 playerInRange = true;
 
                 playerFound = true;
+
             }
 
         }
@@ -257,20 +280,13 @@ public class AI : MonoBehaviour {
 
     public void ChasePlayer(float speed, float maxChaseRange)
     {
-        
+        var playerDir = playerChar.position.x - transform.position.x;
 
         if(distanceToPlayer > maxChaseRange)
         {
-    
-            var playerDir = playerChar.position.x - transform.position.x;
-            
-
             if(playerDir > 0)
             {
-       
-
-  
-                    rb.AddForce(Vector2.right * speed);
+                rb.AddForce(Vector2.right * speed);
                 JumpCheck();
 
             }
@@ -278,8 +294,7 @@ public class AI : MonoBehaviour {
             if (playerDir < 0)
             {
         
-
-                    rb.AddForce(Vector2.left * speed);
+                rb.AddForce(Vector2.left * speed);
                 JumpCheck();
 
             }
@@ -290,7 +305,7 @@ public class AI : MonoBehaviour {
     }
 
 
-    public float jumpForce, maxJumpSpeed;
+    public float jumpForce, forwardJumpForce, maxJumpSpeed;
     public void JumpCheck()
     {
 
@@ -298,10 +313,9 @@ public class AI : MonoBehaviour {
         {
 
  
-            if (aiWallRay.PlatformRayCast())
+            if (aiWallRay.ForwardWallCast())
             {
-                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-                rb.AddForce(Vector2.right * jumpForce);
+                JumpForward(forwardJumpForce, jumpForce);
             }
 
 
